@@ -1,0 +1,46 @@
+{
+  "appName": "Battle Slime",
+  "languages": {
+    "vi": "Tiếng Việt",
+    "en": "English"
+  },
+  "common": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "search": "Tìm kiếm",
+    "loading": "Đang tải...",
+    "noData": "Không có dữ liệu",
+    "language": "Ngôn ngữ"
+  },
+  "nav": {
+    "dashboard": "Tổng quan",
+    "settings": "Cài đặt"
+  },
+  "validation": {
+    "required": "Trường này không được để trống",
+    "invalid": "Giá trị không hợp lệ",
+    "email": "Email không đúng định dạng",
+    "min": "Tối thiểu {min} ký tự",
+    "max": "Tối đa {max} ký tự"
+  },
+  "error": {
+    "unknown": "Đã có lỗi xảy ra, vui lòng thử lại",
+    "AUTH_INVALID_CREDENTIALS": "Email hoặc mật khẩu không đúng",
+    "ADMIN_INVALID_CREDENTIALS": "Email hoặc mật khẩu không đúng",
+    "ADMIN_ACCESS_REQUIRED": "Bạn không có quyền truy cập",
+    "NOT_FOUND": "Không tìm thấy tài nguyên",
+    "MISSING_TOKEN": "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại",
+    "INVALID_TOKEN": "Phiên đăng nhập không hợp lệ, vui lòng đăng nhập lại",
+    "AUTH_EMAIL_EXISTS": "Email này đã được sử dụng"
+  },
+  "auth": {
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "email": "Email",
+    "welcomeBack": "Chào mừng trở lại"
+  }
+}

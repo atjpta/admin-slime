@@ -1,0 +1,46 @@
+{
+  "appName": "Battle Slime",
+  "languages": {
+    "vi": "Tiếng Việt",
+    "en": "English"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "loading": "Loading...",
+    "noData": "No data",
+    "language": "Language"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "settings": "Settings"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalid": "Invalid value",
+    "email": "Invalid email address",
+    "min": "Minimum {min} characters",
+    "max": "Maximum {max} characters"
+  },
+  "error": {
+    "unknown": "Something went wrong, please try again",
+    "AUTH_INVALID_CREDENTIALS": "Invalid email or password",
+    "ADMIN_INVALID_CREDENTIALS": "Invalid email or password",
+    "ADMIN_ACCESS_REQUIRED": "You do not have permission to access",
+    "NOT_FOUND": "Resource not found",
+    "MISSING_TOKEN": "Session expired, please log in again",
+    "INVALID_TOKEN": "Invalid session, please log in again",
+    "AUTH_EMAIL_EXISTS": "This email is already in use"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "email": "Email",
+    "welcomeBack": "Welcome back"
+  }
+}
