@@ -16,6 +16,11 @@
   },
   "nav": {
     "dashboard": "Tổng quan",
+    "userManagement": "Quản lý người dùng",
+    "users": "Người dùng",
+    "admins": "Admin",
+    "players": "Người chơi",
+    "items": "Vật phẩm",
     "settings": "Cài đặt"
   },
   "validation": {
