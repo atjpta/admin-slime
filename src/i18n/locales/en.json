@@ -5,6 +5,7 @@
     "en": "English"
   },
   "common": {
+    "all": "All",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
@@ -39,6 +40,28 @@
     "MISSING_TOKEN": "Session expired, please log in again",
     "INVALID_TOKEN": "Invalid session, please log in again",
     "AUTH_EMAIL_EXISTS": "This email is already in use"
+  },
+  "table": {
+    "search": "Search...",
+    "empty": "No data",
+    "showing": "{from}-{to} of {total} records"
+  },
+  "user": {
+    "title": "Users",
+    "subtitle": "Manage user accounts in the system",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "edit": {
+      "title": "Edit User",
+      "success": "User updated successfully"
+    },
+    "columns": {
+      "email": "Email",
+      "status": "Status",
+      "createdAt": "Created At"
+    }
   },
   "auth": {
     "login": "Login",

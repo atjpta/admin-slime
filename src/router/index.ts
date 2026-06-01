@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import type { BreadcrumbItem } from '@/interfaces/breadcrumb-item'
+import type { BreadcrumbItem } from '@/interfaces/breadcrumb-item.interface'
 
 declare module 'vue-router' {
   interface RouteMeta {

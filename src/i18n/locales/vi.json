@@ -5,6 +5,7 @@
     "en": "English"
   },
   "common": {
+    "all": "Tất cả",
     "save": "Lưu",
     "cancel": "Hủy",
     "delete": "Xóa",
@@ -39,6 +40,28 @@
     "MISSING_TOKEN": "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại",
     "INVALID_TOKEN": "Phiên đăng nhập không hợp lệ, vui lòng đăng nhập lại",
     "AUTH_EMAIL_EXISTS": "Email này đã được sử dụng"
+  },
+  "table": {
+    "search": "Tìm kiếm...",
+    "empty": "Không có dữ liệu",
+    "showing": "{from}-{to} / {total} bản ghi"
+  },
+  "user": {
+    "title": "Người dùng",
+    "subtitle": "Quản lý tài khoản người dùng trong hệ thống",
+    "status": {
+      "active": "Đang hoạt động",
+      "inactive": "Không hoạt động"
+    },
+    "edit": {
+      "title": "Chỉnh sửa người dùng",
+      "success": "Cập nhật người dùng thành công"
+    },
+    "columns": {
+      "email": "Email",
+      "status": "Trạng thái",
+      "createdAt": "Ngày tạo"
+    }
   },
   "auth": {
     "login": "Đăng nhập",

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { LayoutDashboardIcon, UsersIcon, PackageIcon, ShieldIcon, SwordIcon } from '@lucide/vue'
-import type { NavItem } from '@/interfaces/nav-item'
+import type { NavItem } from '@/interfaces/nav-item.interface.ts'
 import VNavItem from './v-nav-item.vue'
 import { RouteName } from '@/router'
 

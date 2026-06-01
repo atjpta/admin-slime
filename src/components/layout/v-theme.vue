@@ -67,7 +67,7 @@ onMounted(() => {
           :class="{ 'bg-primary/10 text-primary font-medium': current === theme }"
           @click="apply(theme)"
         >
-          <span :data-theme="theme" class="flex shrink-0 gap-0.5 overflow-hidden rounded">
+          <span :data-theme="theme" class="flex overflow-hidden">
             <span class="bg-primary block size-2" />
             <span class="bg-secondary block size-2" />
             <span class="bg-accent block size-2" />

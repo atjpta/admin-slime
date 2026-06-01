@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import type { NavItem } from '@/interfaces/nav-item'
+import type { NavItem } from '@/interfaces/nav-item.interface'
 
 defineOptions({ name: 'VNavItem' })
 

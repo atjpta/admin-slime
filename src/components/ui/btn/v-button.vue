@@ -14,7 +14,11 @@ const attrs = useAttrs()
 </script>
 
 <template>
-  <button v-bind="attrs" :disabled="(attrs.disabled as boolean) || loading" class="btn relative">
+  <button
+    v-bind="attrs"
+    :disabled="(attrs.disabled as boolean) || loading"
+    class="btn btn-sm relative"
+  >
     <span v-if="loading" class="absolute inset-0 flex items-center justify-center">
       <span class="loading loading-spinner" />
     </span>
