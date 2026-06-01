@@ -10,9 +10,21 @@ interface Props {
   loading?: boolean
   skeletonRows?: number
   skeletonDelay?: number
+  showIndex?: boolean
 }
 
-const { table, loading, skeletonRows = 5, skeletonDelay = 300 } = defineProps<Props>()
+const {
+  table,
+  loading,
+  skeletonRows = 5,
+  skeletonDelay = 300,
+  showIndex = true,
+} = defineProps<Props>()
+
+function rowNumber(rowIndex: number) {
+  const { pageIndex, pageSize } = table.getState().pagination
+  return pageIndex * pageSize + rowIndex + 1
+}
 const { t } = useI18n()
 
 const alignClass = { left: 'text-left', center: 'text-center', right: 'text-right' }
@@ -43,14 +55,22 @@ onUnmounted(() => clearTimeout(skeletonTimer))
 </script>
 
 <template>
-  <div class="overflow-hidden">
+  <div class="overflow-x-auto">
     <!--
       table-fixed: width column do header quyết định, không bị content hay
       skeleton làm lệch → header không bị nhảy vị trí
     -->
-    <table class="table-zebra [&_tbody_tr:nth-child(even)]:bg-primary/5 table w-full table-fixed">
+    <table
+      class="table-zebra [&_tbody_tr:nth-child(even)]:bg-base-200 table w-full min-w-160 table-fixed"
+    >
       <thead>
         <tr v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+          <th
+            v-if="showIndex"
+            class="text-base-content/50 w-12 text-center text-xs font-semibold tracking-wide uppercase"
+          >
+            #
+          </th>
           <th
             v-for="header in headerGroup.headers"
             :key="header.id"
@@ -77,6 +97,9 @@ onUnmounted(() => clearTimeout(skeletonTimer))
             :key="i"
             class="[&>td:first-child]:border-l-2 [&>td:first-child]:border-l-transparent"
           >
+            <td v-if="showIndex" class="text-center">
+              <div class="skeleton mx-auto h-4 w-6 rounded" />
+            </td>
             <td v-for="(header, idx) in table.getHeaderGroups()[0]?.headers" :key="header.id">
               <div
                 class="skeleton h-4 rounded"
@@ -92,10 +115,14 @@ onUnmounted(() => clearTimeout(skeletonTimer))
         <!-- Data rows — giữ nguyên khi refresh, chỉ dim nhẹ -->
         <template v-else-if="table.getRowModel().rows.length">
           <tr
-            v-for="row in table.getRowModel().rows"
+            v-for="(row, rowIndex) in table.getRowModel().rows"
             :key="row.id"
-            class="hover:bg-base-200/40 hover:[&>td:first-child]:border-l-primary transition-colors [&>td:first-child]:border-l-2 [&>td:first-child]:border-l-transparent"
+            class="hover:bg-primary/5! hover:[&>td:first-child]:border-l-primary transition-colors [&>td:first-child]:border-l-2 [&>td:first-child]:border-l-transparent"
+            :class="{ 'pointer-events-none opacity-50': loading }"
           >
+            <td v-if="showIndex" class="text-base-content/40 w-12 text-center text-sm">
+              {{ rowNumber(rowIndex) }}
+            </td>
             <td
               v-for="cell in row.getVisibleCells()"
               :key="cell.id"
@@ -108,7 +135,10 @@ onUnmounted(() => clearTimeout(skeletonTimer))
 
         <!-- Empty state -->
         <tr v-else-if="!loading">
-          <td :colspan="table.getAllColumns().length" class="py-20 text-center">
+          <td
+            :colspan="table.getAllColumns().length + (showIndex ? 1 : 0)"
+            class="py-20 text-center"
+          >
             <AlertCircleIcon class="text-warning mx-auto mb-3 size-12" />
             <p class="text-base-content/40 text-sm">{{ t('table.empty') }}</p>
           </td>

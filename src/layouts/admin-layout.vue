@@ -27,7 +27,7 @@ watch(
     <div class="drawer-content bg-base-200/30 flex min-h-screen flex-col">
       <!-- Header -->
       <header class="bg-base-100 border-base-300 sticky top-0 z-30 border-b">
-        <div class="flex h-14 items-center gap-2 px-4">
+        <div class="flex h-14 items-center gap-2 px-2 sm:px-6">
           <!-- Hamburger (mobile only) -->
           <label
             for="sidebar-drawer"

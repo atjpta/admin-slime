@@ -44,7 +44,22 @@
   "table": {
     "search": "Tìm kiếm...",
     "empty": "Không có dữ liệu",
-    "showing": "{from}-{to} / {total} bản ghi"
+    "showing": "{from}-{to} / {total} bản ghi",
+    "resetFilters": "Xóa bộ lọc"
+  },
+  "admin": {
+    "title": "Admin",
+    "subtitle": "Quản lý tài khoản admin trong hệ thống",
+    "status": {
+      "active": "Đang hoạt động",
+      "inactive": "Không hoạt động"
+    },
+    "columns": {
+      "email": "Email",
+      "status": "Trạng thái",
+      "createdAt": "Ngày tạo",
+      "updatedAt": "Ngày cập nhật"
+    }
   },
   "user": {
     "title": "Người dùng",
@@ -60,7 +75,8 @@
     "columns": {
       "email": "Email",
       "status": "Trạng thái",
-      "createdAt": "Ngày tạo"
+      "createdAt": "Ngày tạo",
+      "updatedAt": "Ngày cập nhật"
     }
   },
   "auth": {

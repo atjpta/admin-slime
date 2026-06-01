@@ -44,7 +44,22 @@
   "table": {
     "search": "Search...",
     "empty": "No data",
-    "showing": "{from}-{to} of {total} records"
+    "showing": "{from}-{to} of {total} records",
+    "resetFilters": "Reset filters"
+  },
+  "admin": {
+    "title": "Admins",
+    "subtitle": "Manage admin accounts in the system",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "columns": {
+      "email": "Email",
+      "status": "Status",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At"
+    }
   },
   "user": {
     "title": "Users",
@@ -60,7 +75,8 @@
     "columns": {
       "email": "Email",
       "status": "Status",
-      "createdAt": "Created At"
+      "createdAt": "Created At",
+      "updatedAt": "Updated At"
     }
   },
   "auth": {

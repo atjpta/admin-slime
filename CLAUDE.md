@@ -29,6 +29,7 @@ src/pages/
 ```
 
 Ví dụ:
+
 ```
 src/pages/
 ├── auth/
@@ -76,6 +77,7 @@ src/layouts/
 - Dùng `defineOptions({ inheritAttrs: false })` + `useAttrs()` để tự spread attrs vào đúng element. Nếu không, Vue fallthrough lên root element gây lỗi runtime.
 - **Không** dùng `extends HTMLAttributes` hay `extends ButtonHTMLAttributes` — tạo union type quá phức tạp, gây lỗi TS2590.
 - Thay vào đó, khai báo **explicit** các native attrs hay dùng ngay trong `interface Props`:
+
   ```ts
   defineOptions({ inheritAttrs: false })
 
@@ -90,10 +92,12 @@ src/layouts/
   const { loading, icon } = defineProps<Props>()
   const attrs = useAttrs()
   ```
+
 - Không khai báo `class` trong Props — để tự đi qua `attrs`, Vue merge với `class` static trên element tự động.
 - Khi cần thêm native attr mới: thêm thẳng vào `interface Props`.
 
 - Không định nghĩa `variant`, `size` hay các DaisyUI modifier làm prop — truyền thẳng qua `class`:
+
   ```vue
   <!-- đúng -->
   <VButton class="btn-primary btn-sm">Lưu</VButton>
@@ -191,3 +195,146 @@ Error messages nằm trong namespace `validation`:
 ```
 
 Để thêm rule mới: thêm case vào `issueToI18nKey()` trong `useZodForm.ts` và thêm key tương ứng vào cả `vi.json` và `en.json`.
+
+---
+
+## Table Page Pattern
+
+Mọi page dạng danh sách (list/table) dùng chung pattern sau. Tham khảo `src/pages/users/` làm ví dụ cụ thể.
+
+### Cấu trúc file
+
+```
+src/pages/<name>/
+├── index.vue                   ← page chính
+└── components/
+    └── <name>-edit-modal.vue   ← modal edit (nếu có)
+```
+
+### Script setup
+
+```ts
+// 1. Data
+const items = ref<Item[]>([])
+const total = ref(0)
+const editingItem = ref<Item | null>(null)
+
+// 2. Filter — dùng reactive object, mỗi key tương ứng URL param
+const filter = reactive({ status: '' as ItemStatus | '' })
+
+// 3. Columns — computed để react khi đổi ngôn ngữ
+const columns = computed<ColumnDef<Item>[]>(() => [
+  { accessorKey: 'name', header: t('item.columns.name') },
+  {
+    accessorKey: 'status',
+    header: t('item.columns.status'),
+    cell: ({ row }) =>
+      h(VStatusBadge, {
+        value: row.getValue<string>('status'),
+        i18nKey: 'item.status',
+        colors: { [ItemStatus.ACTIVE]: 'success' },
+      }),
+    meta: { align: 'center' },
+  },
+  {
+    id: 'actions',
+    header: '',
+    meta: { align: 'center' },
+    cell: ({ row }) =>
+      h('div', { class: 'flex justify-center gap-1' }, [
+        h(VButton, {
+          icon: SquarePenIcon,
+          class: 'btn-ghost text-primary',
+          onClick: () => (editingItem.value = row.original),
+        }),
+      ]),
+  },
+])
+
+// 4. Fetch function — KHÔNG tự quản lý loading, không reset page/filter
+async function fetchItems() {
+  const res = await itemService.index({
+    page: page.value,
+    limit: pageSize.value,
+    search: search.value || undefined,
+    status: filter.status || undefined,
+  })
+  items.value = res.items
+  total.value = res.pagination.total
+}
+
+// 5. useDataTable — tự xử lý loading, URL sync, debounce, page reset
+const { table, page, pageSize, search, loading } = useDataTable({
+  columns,
+  data: items,
+  total,
+  filters: { status: toRef(filter, 'status') }, // key = URL param name
+  onFetch: fetchItems,
+})
+```
+
+### Template
+
+```vue
+<template>
+  <div class="flex flex-col gap-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-xl font-semibold">{{ t('item.title') }}</h1>
+        <p class="text-base-content/50 text-sm">{{ t('item.subtitle') }}</p>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow-sm">
+      <div class="card-body gap-4 p-4">
+        <VTableToolbar v-model="search">
+          <template #filters>
+            <VSelectFilter
+              v-model="filter.status"
+              :label="t('item.columns.status')"
+              :enum-values="ItemStatus"
+              i18n-key="item.status"
+            />
+          </template>
+        </VTableToolbar>
+        <VTable :table="table" :loading="loading" />
+        <VPagination v-model:page="page" v-model:page-size="pageSize" :total="total" />
+      </div>
+    </div>
+  </div>
+
+  <ItemEditModal :item="editingItem" @close="editingItem = null" @updated="fetchItems" />
+</template>
+```
+
+### Các component tái sử dụng
+
+| Component       | Props chính                                   | Ghi chú                                                          |
+| --------------- | --------------------------------------------- | ---------------------------------------------------------------- |
+| `VTable`        | `table`, `loading`                            | `meta.align` trên column để căn chỉnh                            |
+| `VTableToolbar` | `v-model` (search)                            | Slot `#filters` cho filter thêm, slot default cho action buttons |
+| `VPagination`   | `v-model:page`, `v-model:page-size`, `total`  |                                                                  |
+| `VSelectFilter` | `v-model`, `label`, `enum-values`, `i18n-key` | Hoặc truyền `options` thủ công                                   |
+| `VStatusBadge`  | `value`, `i18n-key`, `colors`                 | `colors`: map value → DaisyUI color name                         |
+
+### i18n namespace cho mỗi resource
+
+```json
+{
+  "<resource>": {
+    "title": "...",
+    "subtitle": "...",
+    "status": { "active": "...", "inactive": "..." },
+    "columns": { "name": "...", "status": "...", "createdAt": "..." },
+    "edit": { "title": "...", "success": "..." }
+  }
+}
+```
+
+### useDataTable — những gì tự xử lý
+
+- **URL sync**: `page`, `limit`, `search` và tất cả `filters` tự ghi/đọc từ `route.query`
+- **Loading**: set `loading = true` khi fetch, giữ tối thiểu `loadingDelay` ms (default 200ms)
+- **Page reset**: khi `search` hoặc bất kỳ filter nào thay đổi, tự reset `page = 1`
+- **Debounce**: search input debounce 400ms tại `VTableToolbar`, filter select là immediate
+- **TDZ safe**: `onFetch` được gọi qua `nextTick` để tránh lỗi temporal dead zone

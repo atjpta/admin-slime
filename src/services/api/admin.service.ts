@@ -1,12 +1,13 @@
 import type { Pagination } from '@/interfaces/pagination.interface'
-import type { User } from '@/interfaces/user.interface'
+import type { Admin, AdminFilter } from '@/interfaces/admin.interface'
 import { BaseApi } from '@/services/api/base-api.service'
 
 class AdminService extends BaseApi {
   private url = '/admin'
-  async index() {
-    const res = await this.http.get(`${this.url}`)
-    return this.unwrap<Pagination<User>>(res)
+
+  async index(filter: AdminFilter) {
+    const res = await this.http.get(`${this.url}`, { query: filter })
+    return this.unwrap<Pagination<Admin[]>>(res)
   }
 }
 

@@ -14,6 +14,7 @@ import VStatusBadge from '@/components/ui/badge/v-status-badge.vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import { Trash2, SquarePenIcon } from '@lucide/vue'
 import UserEditModal from './components/user-edit-modal.vue'
+import { formatDate } from '@/utils/format'
 
 const { t } = useI18n()
 
@@ -42,7 +43,13 @@ const columns = computed<ColumnDef<User>[]>(() => [
     meta: { align: 'center' },
     accessorKey: 'createdAt',
     header: t('user.columns.createdAt'),
-    cell: ({ row }) => new Date(row.getValue<string>('createdAt')).toLocaleDateString(),
+    cell: ({ row }) => formatDate(row.getValue('createdAt')),
+  },
+  {
+    meta: { align: 'center' },
+    accessorKey: 'updatedAt',
+    header: t('user.columns.updatedAt'),
+    cell: ({ row }) => new Date(row.getValue<string>('updatedAt')).toLocaleString(),
   },
   {
     id: 'actions',
@@ -97,7 +104,11 @@ const { table, page, pageSize, search, loading } = useDataTable({
     <!-- Card -->
     <div class="card bg-base-100 shadow-sm">
       <div class="card-body gap-4 p-4">
-        <VTableToolbar v-model="search">
+        <VTableToolbar
+          v-model="search"
+          :active-filters="!!filter.status"
+          @reset="filter.status = ''"
+        >
           <template #filters>
             <VSelectFilter
               v-model="filter.status"
