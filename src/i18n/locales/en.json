@@ -72,8 +72,30 @@
       "title": "Edit User",
       "success": "User updated successfully"
     },
+    "viewPlayers": "View players",
     "columns": {
       "email": "Email",
+      "status": "Status",
+      "players": "Players",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At"
+    }
+  },
+  "player": {
+    "title": "Players",
+    "subtitle": "Manage player accounts in the system",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "role": {
+      "player": "Player",
+      "bot": "Bot"
+    },
+    "columns": {
+      "name": "Character Name",
+      "email": "Email",
+      "role": "Role",
       "status": "Status",
       "createdAt": "Created At",
       "updatedAt": "Updated At"

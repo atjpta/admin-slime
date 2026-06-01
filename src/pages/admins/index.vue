@@ -7,7 +7,7 @@ import VTable from '@/components/ui/table/v-table.vue'
 import VTableToolbar from '@/components/ui/table/v-table-toolbar.vue'
 import VPagination from '@/components/ui/pagination/v-pagination.vue'
 import VSelectFilter from '@/components/ui/select/v-select-filter.vue'
-import VStatusBadge from '@/components/ui/badge/v-status-badge.vue'
+import VUserStatusBadge from '@/components/ui/badge/v-user-status-badge.vue'
 import { adminService } from '@/services/api/admin.service'
 import { formatDate } from '@/utils/format'
 import { UserStatus } from '@/enums/user.enum'
@@ -23,29 +23,26 @@ const columns = computed<ColumnDef<Admin>[]>(() => [
   {
     accessorKey: 'email',
     header: t('admin.columns.email'),
+    cell: ({ row }) => row.getValue('email') ?? '-',
+    meta: { minWidth: 'w-52' },
   },
   {
     accessorKey: 'status',
     header: t('admin.columns.status'),
-    cell: ({ row }) =>
-      h(VStatusBadge, {
-        value: row.getValue<string>('status'),
-        i18nKey: 'admin.status',
-        colors: { [UserStatus.ACTIVE]: 'success', [UserStatus.INACTIVE]: 'error' },
-      }),
-    meta: { align: 'center' },
+    cell: ({ row }) => h(VUserStatusBadge, { value: row.getValue<UserStatus>('status') }),
+    meta: { align: 'center', minWidth: 'w-32' },
   },
   {
     accessorKey: 'createdAt',
     header: t('admin.columns.createdAt'),
     cell: ({ row }) => formatDate(row.getValue('createdAt')),
-    meta: { align: 'center' },
+    meta: { align: 'center', minWidth: 'w-40' },
   },
   {
     accessorKey: 'updatedAt',
     header: t('admin.columns.updatedAt'),
-    cell: ({ row }) => new Date(row.getValue<string>('updatedAt')).toLocaleString(),
-    meta: { align: 'center' },
+    cell: ({ row }) => formatDate(row.getValue('updatedAt')),
+    meta: { align: 'center', minWidth: 'w-40' },
   },
 ])
 

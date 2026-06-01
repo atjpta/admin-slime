@@ -76,8 +76,9 @@ onUnmounted(() => clearTimeout(skeletonTimer))
             :key="header.id"
             :colspan="header.colSpan"
             :class="[
-              'text-base-content/50 text-xs font-semibold tracking-wide uppercase',
+              'text-base-content/50 text-xs font-semibold tracking-wide whitespace-nowrap uppercase',
               cellAlign(header.column.columnDef.meta?.align),
+              header.column.columnDef.meta?.minWidth,
             ]"
           >
             <FlexRender
@@ -112,7 +113,7 @@ onUnmounted(() => clearTimeout(skeletonTimer))
           </tr>
         </template>
 
-        <!-- Data rows — giữ nguyên khi refresh, chỉ dim nhẹ -->
+        <!-- Data rows  -->
         <template v-else-if="table.getRowModel().rows.length">
           <tr
             v-for="(row, rowIndex) in table.getRowModel().rows"
@@ -124,6 +125,7 @@ onUnmounted(() => clearTimeout(skeletonTimer))
               {{ rowNumber(rowIndex) }}
             </td>
             <td
+              class="whitespace-nowrap"
               v-for="cell in row.getVisibleCells()"
               :key="cell.id"
               :class="cellAlign(cell.column.columnDef.meta?.align)"

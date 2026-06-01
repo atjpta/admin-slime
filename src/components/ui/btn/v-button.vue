@@ -7,9 +7,10 @@ defineOptions({ inheritAttrs: false })
 interface Props extends /* @vue-ignore */ ButtonHTMLAttributes {
   loading?: boolean
   icon?: Component | string
+  iconRight?: boolean
 }
 
-const { loading, icon } = defineProps<Props>()
+const { loading, icon, iconRight } = defineProps<Props>()
 const attrs = useAttrs()
 </script>
 
@@ -24,9 +25,15 @@ const attrs = useAttrs()
     </span>
 
     <span class="flex items-center gap-2" :class="{ invisible: loading }">
-      <img v-if="typeof icon === 'string'" :src="icon" class="size-4 shrink-0" alt="" />
-      <component :is="icon" v-else-if="icon" class="size-4 shrink-0" />
+      <template v-if="!iconRight">
+        <img v-if="typeof icon === 'string'" :src="icon" class="size-4 shrink-0" alt="" />
+        <component :is="icon" v-else-if="icon" class="size-4 shrink-0" />
+      </template>
       <span v-if="$slots.default" class="hidden sm:inline"><slot /></span>
+      <template v-if="iconRight">
+        <img v-if="typeof icon === 'string'" :src="icon" class="size-4 shrink-0" alt="" />
+        <component :is="icon" v-else-if="icon" class="size-4 shrink-0" />
+      </template>
     </span>
   </button>
 </template>

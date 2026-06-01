@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { h, ref, reactive, toRef, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { RouteName } from '@/router'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { useDataTable } from '@/composables/useDataTable'
 import VTable from '@/components/ui/table/v-table.vue'
@@ -10,13 +12,14 @@ import { userService } from '@/services/api/user.service'
 import { UserStatus } from '@/enums/user.enum'
 import type { User, UserFilter } from '@/interfaces/user.interface'
 import VSelectFilter from '@/components/ui/select/v-select-filter.vue'
-import VStatusBadge from '@/components/ui/badge/v-status-badge.vue'
+import VUserStatusBadge from '@/components/ui/badge/v-user-status-badge.vue'
 import VButton from '@/components/ui/btn/v-button.vue'
-import { Trash2, SquarePenIcon } from '@lucide/vue'
+import { Trash2, SquarePenIcon, ExternalLink } from '@lucide/vue'
 import UserEditModal from './components/user-edit-modal.vue'
 import { formatDate } from '@/utils/format'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const users = ref<User[]>([])
 const total = ref(0)
@@ -27,42 +30,54 @@ const columns = computed<ColumnDef<User>[]>(() => [
   {
     accessorKey: 'email',
     header: t('user.columns.email'),
+    cell: ({ row }) => row.getValue('email') ?? '-',
+    meta: { minWidth: 'w-52' },
   },
   {
     accessorKey: 'status',
     header: t('user.columns.status'),
-    cell: ({ row }) =>
-      h(VStatusBadge, {
-        value: row.getValue<string>('status'),
-        i18nKey: 'user.status',
-        colors: { [UserStatus.ACTIVE]: 'success', [UserStatus.INACTIVE]: 'error' },
-      }),
-    meta: { align: 'center' },
+    cell: ({ row }) => h(VUserStatusBadge, { value: row.getValue<UserStatus>('status') }),
+    meta: { align: 'center', minWidth: 'w-32' },
   },
   {
-    meta: { align: 'center' },
+    meta: { align: 'center', minWidth: 'w-40' },
     accessorKey: 'createdAt',
     header: t('user.columns.createdAt'),
     cell: ({ row }) => formatDate(row.getValue('createdAt')),
   },
   {
-    meta: { align: 'center' },
+    meta: { align: 'center', minWidth: 'w-40' },
     accessorKey: 'updatedAt',
     header: t('user.columns.updatedAt'),
-    cell: ({ row }) => new Date(row.getValue<string>('updatedAt')).toLocaleString(),
+    cell: ({ row }) => formatDate(row.getValue('updatedAt')),
+  },
+  {
+    id: 'players',
+    header: t('user.columns.players'),
+    meta: { align: 'center', minWidth: 'w-32' },
+    cell: ({ row }) =>
+      h(
+        VButton,
+        {
+          icon: ExternalLink,
+          iconRight: true,
+          class: 'btn-ghost btn-sm text-secondary',
+          onClick: () =>
+            router.push({ name: RouteName.Players, query: { search: row.original.email } }),
+        },
+        () => t('user.viewPlayers')
+      ),
   },
   {
     id: 'actions',
     header: '',
-    meta: { align: 'center' },
+    meta: { align: 'center', minWidth: 'w-16' },
     cell: ({ row }) =>
-      h('div', { class: 'flex justify-center gap-1' }, [
-        h(VButton, {
-          icon: SquarePenIcon,
-          class: 'btn-ghost text-primary',
-          onClick: () => editUser(row.original),
-        }),
-      ]),
+      h(VButton, {
+        icon: SquarePenIcon,
+        class: 'btn-ghost text-primary',
+        onClick: () => editUser(row.original),
+      }),
   },
 ])
 
@@ -126,9 +141,5 @@ const { table, page, pageSize, search, loading } = useDataTable({
     </div>
   </div>
 
-  <UserEditModal
-    :user="editingUser"
-    @close="editingUser = null"
-    @updated="fetchUsers"
-  />
+  <UserEditModal :user="editingUser" @close="editingUser = null" @updated="fetchUsers" />
 </template>

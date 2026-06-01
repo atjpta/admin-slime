@@ -72,8 +72,30 @@
       "title": "Chỉnh sửa người dùng",
       "success": "Cập nhật người dùng thành công"
     },
+    "viewPlayers": "Xem nhân vật",
     "columns": {
       "email": "Email",
+      "status": "Trạng thái",
+      "players": "Nhân vật",
+      "createdAt": "Ngày tạo",
+      "updatedAt": "Ngày cập nhật"
+    }
+  },
+  "player": {
+    "title": "Người chơi",
+    "subtitle": "Quản lý tài khoản người chơi trong hệ thống",
+    "status": {
+      "active": "Đang hoạt động",
+      "inactive": "Không hoạt động"
+    },
+    "role": {
+      "player": "Người chơi",
+      "bot": "Bot"
+    },
+    "columns": {
+      "name": "Tên nhân vật",
+      "email": "Email",
+      "role": "Vai trò",
       "status": "Trạng thái",
       "createdAt": "Ngày tạo",
       "updatedAt": "Ngày cập nhật"
