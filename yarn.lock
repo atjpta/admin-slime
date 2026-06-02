@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@anilkumarthakur/vue3-json-viewer@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@anilkumarthakur/vue3-json-viewer/-/vue3-json-viewer-0.5.1.tgz#372c7ba35870e26f22c212a1b667e6df71138351"
+  integrity sha512-Tt4nO273cRLXI3sLuM+SffLnXTfcZoqUSvaoZRiWvQ0U1ElSGQeAxtwSLBCHXS8Gx30Q6gclWqvh3KGtsDx68A==
+
 "@babel/generator@^8.0.0-rc.4":
   version "8.0.0-rc.6"
   resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-8.0.0-rc.6.tgz#77d353c82d6578de259161144b6d00779262a2cc"

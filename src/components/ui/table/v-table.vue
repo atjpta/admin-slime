@@ -1,9 +1,9 @@
 <script setup lang="ts" generic="TData">
 import { ref, watch, onUnmounted } from 'vue'
 import { FlexRender } from '@tanstack/vue-table'
-import type { Table } from '@tanstack/vue-table'
+import type { Table, Row } from '@tanstack/vue-table'
 import { useI18n } from 'vue-i18n'
-import { AlertCircle, AlertCircleIcon, InboxIcon } from '@lucide/vue'
+import { AlertCircleIcon } from '@lucide/vue'
 
 interface Props {
   table: Table<TData>
@@ -30,6 +30,11 @@ const { t } = useI18n()
 const alignClass = { left: 'text-left', center: 'text-center', right: 'text-right' }
 function cellAlign(align?: 'left' | 'center' | 'right') {
   return alignClass[align ?? 'left']
+}
+
+// Row có status = 'inactive' → tô nền đỏ nhạt (theo convention status chung của các resource)
+function isInactive(row: Row<TData>) {
+  return (row.original as { status?: string })?.status === 'inactive'
 }
 
 // Chỉ show skeleton sau skeletonDelay ms để tránh flash khi load nhanh
@@ -119,7 +124,10 @@ onUnmounted(() => clearTimeout(skeletonTimer))
             v-for="(row, rowIndex) in table.getRowModel().rows"
             :key="row.id"
             class="hover:bg-primary/5! hover:[&>td:first-child]:border-l-primary transition-colors [&>td:first-child]:border-l-2 [&>td:first-child]:border-l-transparent"
-            :class="{ 'pointer-events-none opacity-50': loading }"
+            :class="[
+              { 'pointer-events-none opacity-50': loading },
+              isInactive(row) && 'bg-error/5! [&>td:first-child]:border-l-error',
+            ]"
           >
             <td v-if="showIndex" class="text-base-content/40 w-12 text-center text-sm">
               {{ rowNumber(rowIndex) }}

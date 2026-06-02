@@ -12,6 +12,7 @@
     "lint": "eslint src/ --fix"
   },
   "dependencies": {
+    "@anilkumarthakur/vue3-json-viewer": "^0.5.1",
     "@colyseus/schema": "^4.0.0",
     "@colyseus/sdk": "^0.17.0",
     "@lucide/vue": "^1.17.0",

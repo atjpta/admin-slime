@@ -13,7 +13,12 @@
     "search": "Search",
     "loading": "Loading...",
     "noData": "No data",
-    "language": "Language"
+    "language": "Language",
+    "yes": "Yes",
+    "no": "No",
+    "detail": "Detail",
+    "close": "Close",
+    "view": "View"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -21,7 +26,9 @@
     "users": "Users",
     "admins": "Admins",
     "players": "Players",
+    "itemManagement": "Item Management",
     "items": "Items",
+    "battleItems": "Battle Items",
     "settings": "Settings"
   },
   "validation": {
@@ -97,6 +104,61 @@
       "email": "Email",
       "role": "Role",
       "status": "Status",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At"
+    }
+  },
+  "item": {
+    "title": "Items",
+    "subtitle": "Manage items in the system",
+    "type": {
+      "equipment": "Equipment",
+      "consumable": "Consumable",
+      "material": "Material"
+    },
+    "rarity": {
+      "common": "Common",
+      "rare": "Rare",
+      "epic": "Epic",
+      "legendary": "Legendary"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "columns": {
+      "code": "Code",
+      "type": "Type",
+      "rarity": "Rarity",
+      "status": "Status",
+      "sellPrice": "Sell Price",
+      "stackable": "Stackable",
+      "metadata": "Metadata",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At"
+    }
+  },
+  "battleItem": {
+    "title": "Battle Items",
+    "subtitle": "Manage battle items in the system",
+    "type": {
+      "buff": "Buff",
+      "info": "Info",
+      "bluff": "Bluff",
+      "tempo": "Tempo",
+      "chaos": "Chaos"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "columns": {
+      "code": "Code",
+      "type": "Type",
+      "status": "Status",
+      "rule": "Rule",
+      "weight": "Weight",
+      "note": "Note",
       "createdAt": "Created At",
       "updatedAt": "Updated At"
     }

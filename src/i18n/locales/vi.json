@@ -13,7 +13,12 @@
     "search": "Tìm kiếm",
     "loading": "Đang tải...",
     "noData": "Không có dữ liệu",
-    "language": "Ngôn ngữ"
+    "language": "Ngôn ngữ",
+    "yes": "Có",
+    "no": "Không",
+    "detail": "Chi tiết",
+    "close": "Đóng",
+    "view": "Xem"
   },
   "nav": {
     "dashboard": "Tổng quan",
@@ -21,7 +26,9 @@
     "users": "Người dùng",
     "admins": "Admin",
     "players": "Người chơi",
+    "itemManagement": "Quản lý vật phẩm",
     "items": "Vật phẩm",
+    "battleItems": "Vật phẩm chiến đấu",
     "settings": "Cài đặt"
   },
   "validation": {
@@ -99,6 +106,61 @@
       "status": "Trạng thái",
       "createdAt": "Ngày tạo",
       "updatedAt": "Ngày cập nhật"
+    }
+  },
+  "item": {
+    "title": "Vật phẩm",
+    "subtitle": "Quản lý vật phẩm trong hệ thống",
+    "type": {
+      "equipment": "Trang bị",
+      "consumable": "Tiêu hao",
+      "material": "Nguyên liệu"
+    },
+    "rarity": {
+      "common": "Thường",
+      "rare": "Hiếm",
+      "epic": "Sử thi",
+      "legendary": "Huyền thoại"
+    },
+    "status": {
+      "active": "Đang hoạt động",
+      "inactive": "Không hoạt động"
+    },
+    "columns": {
+      "code": "Mã",
+      "type": "Loại",
+      "rarity": "Độ hiếm",
+      "status": "Trạng thái",
+      "sellPrice": "Giá bán",
+      "stackable": "Xếp chồng",
+      "metadata": "Thuộc tính",
+      "createdAt": "Ngày tạo",
+      "updatedAt": "Ngày sửa"
+    }
+  },
+  "battleItem": {
+    "title": "Vật phẩm chiến đấu",
+    "subtitle": "Quản lý vật phẩm chiến đấu trong hệ thống",
+    "type": {
+      "buff": "Tăng cường",
+      "info": "Thông tin",
+      "bluff": "Hư trương",
+      "tempo": "Nhịp độ",
+      "chaos": "Hỗn loạn"
+    },
+    "status": {
+      "active": "Đang hoạt động",
+      "inactive": "Không hoạt động"
+    },
+    "columns": {
+      "code": "Mã",
+      "type": "Loại",
+      "status": "Trạng thái",
+      "rule": "Luật",
+      "weight": "Trọng số",
+      "note": "Ghi chú",
+      "createdAt": "Ngày tạo",
+      "updatedAt": "Ngày sửa"
     }
   },
   "auth": {

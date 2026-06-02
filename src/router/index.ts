@@ -14,6 +14,7 @@ export const RouteName = {
   Admins: 'admins',
   Players: 'players',
   Items: 'items',
+  BattleItems: 'battle-items',
 } as const
 
 const router = createRouter({
@@ -81,7 +82,23 @@ const router = createRouter({
           path: 'items',
           name: RouteName.Items,
           component: () => import('@/pages/items/index.vue'),
-          meta: { breadcrumbs: [{ labelKey: 'nav.items', routeName: RouteName.Items }] },
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.itemManagement' },
+              { labelKey: 'nav.items', routeName: RouteName.Items },
+            ],
+          },
+        },
+        {
+          path: 'battle-items',
+          name: RouteName.BattleItems,
+          component: () => import('@/pages/battle-items/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.itemManagement' },
+              { labelKey: 'nav.battleItems', routeName: RouteName.BattleItems },
+            ],
+          },
         },
       ],
     },

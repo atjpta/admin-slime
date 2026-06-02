@@ -29,7 +29,7 @@ const attrs = useAttrs()
         <img v-if="typeof icon === 'string'" :src="icon" class="size-4 shrink-0" alt="" />
         <component :is="icon" v-else-if="icon" class="size-4 shrink-0" />
       </template>
-      <span v-if="$slots.default" class="hidden sm:inline"><slot /></span>
+      <span v-if="$slots.default" :class="{ 'hidden sm:inline': icon }"><slot /></span>
       <template v-if="iconRight">
         <img v-if="typeof icon === 'string'" :src="icon" class="size-4 shrink-0" alt="" />
         <component :is="icon" v-else-if="icon" class="size-4 shrink-0" />

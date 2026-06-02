@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { LayoutDashboardIcon, UsersIcon, PackageIcon, ShieldIcon, SwordIcon } from '@lucide/vue'
+import {
+  LayoutDashboardIcon,
+  UsersIcon,
+  PackageIcon,
+  ShieldIcon,
+  SwordIcon,
+  SwordsIcon,
+} from '@lucide/vue'
 import type { NavItem } from '@/interfaces/nav-item.interface.ts'
 import VNavItem from './v-nav-item.vue'
 import { RouteName } from '@/router'
@@ -35,9 +42,20 @@ const NAV: NavItem[] = [
     ],
   },
   {
-    labelKey: 'nav.items',
+    labelKey: 'nav.itemManagement',
     icon: PackageIcon,
-    routeName: RouteName.Items,
+    children: [
+      {
+        labelKey: 'nav.items',
+        icon: PackageIcon,
+        routeName: RouteName.Items,
+      },
+      {
+        labelKey: 'nav.battleItems',
+        icon: SwordsIcon,
+        routeName: RouteName.BattleItems,
+      },
+    ],
   },
 ]
 </script>

@@ -14,7 +14,7 @@ import type { User, UserFilter } from '@/interfaces/user.interface'
 import VSelectFilter from '@/components/ui/select/v-select-filter.vue'
 import VUserStatusBadge from '@/components/ui/badge/v-user-status-badge.vue'
 import VButton from '@/components/ui/btn/v-button.vue'
-import { Trash2, SquarePenIcon, ExternalLink } from '@lucide/vue'
+import { SquarePenIcon, ExternalLink } from '@lucide/vue'
 import UserEditModal from './components/user-edit-modal.vue'
 import { formatDate } from '@/utils/format'
 
