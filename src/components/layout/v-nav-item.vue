@@ -13,8 +13,14 @@ const { t } = useI18n()
 
 const matchedNames = computed(() => new Set(route.matched.map((r) => r.name)))
 
-function isActive(node: NavItem): boolean {
+function isExactActive(node: NavItem): boolean {
   if (node.routeName) return matchedNames.value.has(node.routeName)
+  return node.children?.some((c) => isExactActive(c)) ?? false
+}
+
+function isActive(node: NavItem): boolean {
+  if (isExactActive(node)) return true
+  if (node.routeName && node.activeFor?.some((name) => matchedNames.value.has(name))) return true
   return node.children?.some((c) => isActive(c)) ?? false
 }
 </script>
@@ -23,7 +29,7 @@ function isActive(node: NavItem): boolean {
   <li>
     <details v-if="item.children?.length" open>
       <summary class="rounded-none" :class="{ 'text-primary font-semibold': isActive(item) }">
-        <component :is="item.icon" class="size-4 shrink-0" />
+        <component :is="item.icon" class="size-4 shrink-0" :class="item.iconClass" />
         {{ t(item.labelKey) }}
       </summary>
       <ul>
@@ -35,12 +41,14 @@ function isActive(node: NavItem): boolean {
       :to="{ name: item.routeName }"
       class="rounded-none border-l-2"
       :class="
-        isActive(item)
+        isExactActive(item)
           ? 'border-primary bg-primary/10 text-primary hover:bg-primary/10 focus:bg-primary/10 font-medium'
-          : 'border-transparent'
+          : isActive(item)
+            ? 'border-transparent text-primary font-medium'
+            : 'border-transparent'
       "
     >
-      <component :is="item.icon" class="size-4 shrink-0" />
+      <component :is="item.icon" class="size-4 shrink-0" :class="isActive(item) ? '' : item.iconClass" />
       {{ t(item.labelKey) }}
     </RouterLink>
   </li>

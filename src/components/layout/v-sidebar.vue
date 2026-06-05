@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import {
-  LayoutDashboardIcon,
-  UsersIcon,
-  PackageIcon,
-  ShieldIcon,
-  SwordIcon,
-  SwordsIcon,
+  GaugeIcon,
+  Users2Icon,
+  CircleUserIcon,
+  ShieldCheckIcon,
+  JoystickIcon,
+  LayersIcon,
+  GemIcon,
+  ZapIcon,
+  WandSparklesIcon,
+  TicketIcon,
 } from '@lucide/vue'
 import type { NavItem } from '@/interfaces/nav-item.interface.ts'
 import VNavItem from './v-nav-item.vue'
@@ -17,43 +21,65 @@ const { t } = useI18n()
 const NAV: NavItem[] = [
   {
     labelKey: 'nav.dashboard',
-    icon: LayoutDashboardIcon,
+    icon: GaugeIcon,
+    iconClass: 'text-blue-500',
     routeName: RouteName.Dashboard,
   },
   {
     labelKey: 'nav.userManagement',
-    icon: UsersIcon,
+    icon: Users2Icon,
+    iconClass: 'text-slate-400',
     children: [
       {
         labelKey: 'nav.users',
-        icon: UsersIcon,
+        icon: CircleUserIcon,
+        iconClass: 'text-cyan-500',
         routeName: RouteName.Users,
       },
       {
         labelKey: 'nav.admins',
-        icon: ShieldIcon,
+        icon: ShieldCheckIcon,
+        iconClass: 'text-violet-500',
         routeName: RouteName.Admins,
       },
       {
         labelKey: 'nav.players',
-        icon: SwordIcon,
+        icon: JoystickIcon,
+        iconClass: 'text-rose-500',
         routeName: RouteName.Players,
       },
     ],
   },
   {
     labelKey: 'nav.itemManagement',
-    icon: PackageIcon,
+    icon: LayersIcon,
+    iconClass: 'text-slate-400',
     children: [
       {
         labelKey: 'nav.items',
-        icon: PackageIcon,
+        icon: GemIcon,
+        iconClass: 'text-amber-500',
         routeName: RouteName.Items,
       },
       {
         labelKey: 'nav.battleItems',
-        icon: SwordsIcon,
+        icon: ZapIcon,
+        iconClass: 'text-orange-500',
         routeName: RouteName.BattleItems,
+      },
+    ],
+  },
+  {
+    labelKey: 'nav.gachaManagement',
+    icon: WandSparklesIcon,
+    iconClass: 'text-slate-400',
+    children: [
+      {
+        labelKey: 'nav.gachas',
+        icon: TicketIcon,
+        iconClass: 'text-pink-500',
+        routeName: RouteName.Gachas,
+        activeFor: [RouteName.GachaDetail],
       },
     ],
   },

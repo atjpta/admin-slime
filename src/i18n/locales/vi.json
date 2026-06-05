@@ -18,7 +18,8 @@
     "no": "Không",
     "detail": "Chi tiết",
     "close": "Đóng",
-    "view": "Xem"
+    "view": "Xem",
+    "create": "Tạo mới"
   },
   "nav": {
     "dashboard": "Tổng quan",
@@ -29,6 +30,8 @@
     "itemManagement": "Quản lý vật phẩm",
     "items": "Vật phẩm",
     "battleItems": "Vật phẩm chiến đấu",
+    "gachaManagement": "Quản lý Gacha",
+    "gachas": "Banner Gacha",
     "settings": "Cài đặt"
   },
   "validation": {
@@ -161,6 +164,82 @@
       "note": "Ghi chú",
       "createdAt": "Ngày tạo",
       "updatedAt": "Ngày sửa"
+    }
+  },
+  "gacha": {
+    "title": "Banner Gacha",
+    "subtitle": "Quản lý các banner gacha trong hệ thống",
+    "status": {
+      "active": "Đang hoạt động",
+      "inactive": "Không hoạt động"
+    },
+    "type": {
+      "equipment": "Trang bị"
+    },
+    "drawType": {
+      "draw_1": "1 lượt",
+      "draw_10": "10 lượt"
+    },
+    "currency": {
+      "gold": "Vàng",
+      "gem": "Đá quý",
+      "dust": "Bụi"
+    },
+    "columns": {
+      "code": "Mã banner",
+      "type": "Loại",
+      "status": "Trạng thái",
+      "sortOrder": "Thứ tự",
+      "startAt": "Ngày bắt đầu",
+      "endAt": "Ngày kết thúc",
+      "createdAt": "Ngày tạo"
+    },
+    "tabs": {
+      "costs": "Chi phí",
+      "rarities": "Tỷ lệ hiếm",
+      "rewards": "Phần thưởng"
+    },
+    "costs": {
+      "drawType": "Loại rút",
+      "currencyCode": "Loại tiền",
+      "amount": "Số lượng",
+      "addRow": "Thêm chi phí",
+      "addTitle": "Thêm chi phí",
+      "updateSuccess": "Cập nhật chi phí thành công"
+    },
+    "rarities": {
+      "rarity": "Độ hiếm",
+      "rate": "Tỷ lệ (%)",
+      "updateSuccess": "Cập nhật tỷ lệ thành công"
+    },
+    "rewards": {
+      "addRow": "Thêm item",
+      "addTitle": "Thêm phần thưởng",
+      "searchPlaceholder": "Tìm theo mã item...",
+      "searchHint": "Nhập mã item để tìm kiếm",
+      "addBtn": "Thêm",
+      "alreadyAdded": "Đã thêm",
+      "updateSuccess": "Cập nhật phần thưởng thành công",
+      "quickAdd": {
+        "btn": "Thêm nhanh",
+        "title": "Thêm nhanh theo loại & độ hiếm",
+        "addBtn": "Thêm tất cả phù hợp",
+        "allTypes": "Không chọn = tất cả loại",
+        "allRarities": "Không chọn = tất cả độ hiếm",
+        "noFilterWarning": "Chưa chọn bộ lọc — sẽ thêm toàn bộ item đang active"
+      }
+    },
+    "create": {
+      "title": "Tạo banner mới",
+      "success": "Tạo banner thành công",
+      "codePlaceholder": "Nhập mã banner..."
+    },
+    "edit": {
+      "title": "Chỉnh sửa banner",
+      "success": "Cập nhật banner thành công"
+    },
+    "detail": {
+      "title": "Chi tiết banner"
     }
   },
   "auth": {

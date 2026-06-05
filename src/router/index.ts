@@ -15,6 +15,8 @@ export const RouteName = {
   Players: 'players',
   Items: 'items',
   BattleItems: 'battle-items',
+  Gachas: 'gachas',
+  GachaDetail: 'gacha-detail',
 } as const
 
 const router = createRouter({
@@ -97,6 +99,29 @@ const router = createRouter({
             breadcrumbs: [
               { labelKey: 'nav.itemManagement' },
               { labelKey: 'nav.battleItems', routeName: RouteName.BattleItems },
+            ],
+          },
+        },
+        {
+          path: 'gachas',
+          name: RouteName.Gachas,
+          component: () => import('@/pages/gachas/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.gachaManagement' },
+              { labelKey: 'nav.gachas', routeName: RouteName.Gachas },
+            ],
+          },
+        },
+        {
+          path: 'gachas/:id',
+          name: RouteName.GachaDetail,
+          component: () => import('@/pages/gachas/detail/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.gachaManagement' },
+              { labelKey: 'nav.gachas', routeName: RouteName.Gachas },
+              { labelKey: 'gacha.detail.title' },
             ],
           },
         },

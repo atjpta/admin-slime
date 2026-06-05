@@ -18,7 +18,8 @@
     "no": "No",
     "detail": "Detail",
     "close": "Close",
-    "view": "View"
+    "view": "View",
+    "create": "Create"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -29,6 +30,8 @@
     "itemManagement": "Item Management",
     "items": "Items",
     "battleItems": "Battle Items",
+    "gachaManagement": "Gacha Management",
+    "gachas": "Gacha Banners",
     "settings": "Settings"
   },
   "validation": {
@@ -161,6 +164,82 @@
       "note": "Note",
       "createdAt": "Created At",
       "updatedAt": "Updated At"
+    }
+  },
+  "gacha": {
+    "title": "Gacha Banners",
+    "subtitle": "Manage gacha banners in the system",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "type": {
+      "equipment": "Equipment"
+    },
+    "drawType": {
+      "draw_1": "1 draw",
+      "draw_10": "10 draws"
+    },
+    "currency": {
+      "gold": "Gold",
+      "gem": "Gem",
+      "dust": "Dust"
+    },
+    "columns": {
+      "code": "Banner Code",
+      "type": "Type",
+      "status": "Status",
+      "sortOrder": "Order",
+      "startAt": "Start At",
+      "endAt": "End At",
+      "createdAt": "Created At"
+    },
+    "tabs": {
+      "costs": "Costs",
+      "rarities": "Rarities",
+      "rewards": "Rewards"
+    },
+    "costs": {
+      "drawType": "Draw Type",
+      "currencyCode": "Currency",
+      "amount": "Amount",
+      "addRow": "Add cost",
+      "addTitle": "Add Cost",
+      "updateSuccess": "Costs updated successfully"
+    },
+    "rarities": {
+      "rarity": "Rarity",
+      "rate": "Rate (%)",
+      "updateSuccess": "Rarities updated successfully"
+    },
+    "rewards": {
+      "addRow": "Add item",
+      "addTitle": "Add Reward",
+      "searchPlaceholder": "Search by item code...",
+      "searchHint": "Enter item code to search",
+      "addBtn": "Add",
+      "alreadyAdded": "Added",
+      "updateSuccess": "Rewards updated successfully",
+      "quickAdd": {
+        "btn": "Quick Add",
+        "title": "Quick Add by Type & Rarity",
+        "addBtn": "Add All Matching",
+        "allTypes": "None selected = all types",
+        "allRarities": "None selected = all rarities",
+        "noFilterWarning": "No filter selected — will add all active items"
+      }
+    },
+    "create": {
+      "title": "Create New Banner",
+      "success": "Banner created successfully",
+      "codePlaceholder": "Enter banner code..."
+    },
+    "edit": {
+      "title": "Edit Banner",
+      "success": "Banner updated successfully"
+    },
+    "detail": {
+      "title": "Banner Detail"
     }
   },
   "auth": {
