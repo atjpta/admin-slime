@@ -76,13 +76,14 @@ const columns = computed<ColumnDef<Gacha>[]>(() => [
   {
     id: 'actions',
     header: '',
-    meta: { align: 'center' },
+    meta: { align: 'center', minWidth: 'w-32' },
     cell: ({ row }) =>
       h('div', { class: 'flex justify-center gap-1' }, [
         h(VButton, {
           icon: EyeIcon,
           class: 'btn-ghost text-info',
-          onClick: () => router.push({ name: RouteName.GachaDetail, params: { id: row.original._id } }),
+          onClick: () =>
+            router.push({ name: RouteName.GachaDetail, params: { id: row.original._id } }),
         }),
         h(VButton, {
           icon: SquarePenIcon,
@@ -145,5 +146,9 @@ const { table, page, pageSize, search, loading } = useDataTable({
   </div>
 
   <GachaEditModal :gacha="editingItem" @close="editingItem = null" @updated="fetchItems" />
-  <GachaCreateModal :open="showCreateModal" @close="showCreateModal = false" @created="fetchItems" />
+  <GachaCreateModal
+    :open="showCreateModal"
+    @close="showCreateModal = false"
+    @created="fetchItems"
+  />
 </template>

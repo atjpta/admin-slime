@@ -19,7 +19,9 @@
     "detail": "Detail",
     "close": "Close",
     "view": "View",
-    "create": "Create"
+    "create": "Create",
+    "select": "Select",
+    "confirm": "Confirm"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -109,6 +111,68 @@
       "status": "Status",
       "createdAt": "Created At",
       "updatedAt": "Updated At"
+    },
+    "detail": {
+      "title": "Player Detail",
+      "stats": "Stats",
+      "stat": "Stat",
+      "statType": "Type",
+      "statValue": "Value",
+      "statSource": "Source",
+      "equipment": "Equipment",
+      "slot": "Slot",
+      "inventory": "Inventory",
+      "quantity": "Qty",
+      "source": "Source",
+      "locked": "Locked",
+      "emptySlot": "Empty",
+      "orderIndex": "Slot",
+      "statsSummary": "Stats Summary",
+      "removeConfirm": "Remove item",
+      "equipTitle": "Equip to slot",
+      "equip": "Equip",
+      "unequip": "Unequip",
+      "changeEquip": "Change",
+      "baseStats": "Base Stats",
+      "rarityStats": "Rarity Stats"
+    },
+    "addItem": {
+      "title": "Add Item to Inventory",
+      "itemCodePlaceholder": "Enter item code...",
+      "fetchBtn": "Load",
+      "itemNotFound": "Item not found or not active",
+      "rarityStats": "Rarity Stats",
+      "slotsMax": "Max {n} stats",
+      "overSlots": "Selection exceeds allowed slots ({n})",
+      "modeRandom": "Random (server rolls)",
+      "modeCustom": "Custom",
+      "typeMode": "Type",
+      "valueMode": "Value",
+      "manual": "Manual",
+      "random": "Random",
+      "value_manual": "Manual",
+      "value_random": "Random",
+      "value_max": "Max",
+      "range": "Range",
+      "randomRange": "Random in [{min}, {max}]",
+      "availableStats": "Select stats",
+      "noStatsSelected": "No stats selected"
+    }
+  },
+  "stat": {
+    "key": {
+      "attack": "Attack",
+      "magic": "Magic",
+      "defense": "Defense",
+      "hp": "HP"
+    },
+    "type": {
+      "flat": "Flat",
+      "percent": "Percent"
+    },
+    "source": {
+      "base": "Base",
+      "equipment": "Equipment"
     }
   },
   "item": {
@@ -139,6 +203,27 @@
       "metadata": "Metadata",
       "createdAt": "Created At",
       "updatedAt": "Updated At"
+    },
+    "slot": {
+      "attack": "Attack Weapon",
+      "magic": "Magic Weapon",
+      "shield": "Shield",
+      "helmet": "Helmet",
+      "armor": "Armor",
+      "boots": "Boots",
+      "glove": "Glove",
+      "ring": "Ring",
+      "amulet": "Amulet",
+      "earring": "Earring",
+      "bracelet": "Bracelet"
+    },
+    "source": {
+      "system": "System",
+      "drop": "Drop",
+      "gacha": "Gacha",
+      "shop": "Shop",
+      "quest": "Quest",
+      "craft": "Craft"
     }
   },
   "battleItem": {

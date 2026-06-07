@@ -19,7 +19,9 @@
     "detail": "Chi tiết",
     "close": "Đóng",
     "view": "Xem",
-    "create": "Tạo mới"
+    "create": "Tạo mới",
+    "select": "Chọn",
+    "confirm": "Xác nhận"
   },
   "nav": {
     "dashboard": "Tổng quan",
@@ -109,6 +111,68 @@
       "status": "Trạng thái",
       "createdAt": "Ngày tạo",
       "updatedAt": "Ngày cập nhật"
+    },
+    "detail": {
+      "title": "Chi tiết người chơi",
+      "stats": "Chỉ số",
+      "stat": "Chỉ số",
+      "statType": "Kiểu",
+      "statValue": "Giá trị",
+      "statSource": "Nguồn",
+      "equipment": "Trang bị",
+      "slot": "Vị trí",
+      "inventory": "Túi đồ",
+      "quantity": "Số lượng",
+      "source": "Nguồn",
+      "locked": "Khoá",
+      "emptySlot": "Chưa trang bị",
+      "orderIndex": "Vị trí",
+      "statsSummary": "Chỉ số tổng hợp",
+      "removeConfirm": "Xóa vật phẩm",
+      "equipTitle": "Trang bị vào slot",
+      "equip": "Trang bị",
+      "unequip": "Tháo",
+      "changeEquip": "Thay",
+      "baseStats": "Chỉ số cơ bản",
+      "rarityStats": "Chỉ số độ hiếm"
+    },
+    "addItem": {
+      "title": "Thêm vật phẩm vào túi đồ",
+      "itemCodePlaceholder": "Nhập mã vật phẩm...",
+      "fetchBtn": "Tải",
+      "itemNotFound": "Không tìm thấy vật phẩm hoặc vật phẩm không active",
+      "rarityStats": "Chỉ số rarity",
+      "slotsMax": "Tối đa {n} chỉ số",
+      "overSlots": "Đã chọn vượt quá số slot cho phép ({n})",
+      "modeRandom": "Ngẫu nhiên (server tự roll)",
+      "modeCustom": "Tùy chỉnh",
+      "typeMode": "Kiểu",
+      "valueMode": "Giá trị",
+      "manual": "Nhập tay",
+      "random": "Ngẫu nhiên",
+      "value_manual": "Nhập tay",
+      "value_random": "Ngẫu nhiên",
+      "value_max": "Max",
+      "range": "Khoảng",
+      "randomRange": "Ngẫu nhiên trong [{min}, {max}]",
+      "availableStats": "Chọn thuộc tính",
+      "noStatsSelected": "Chưa chọn thuộc tính nào"
+    }
+  },
+  "stat": {
+    "key": {
+      "attack": "Tấn công",
+      "magic": "Phép thuật",
+      "defense": "Phòng thủ",
+      "hp": "HP"
+    },
+    "type": {
+      "flat": "Cộng thêm",
+      "percent": "Phần trăm"
+    },
+    "source": {
+      "base": "Cơ bản",
+      "equipment": "Trang bị"
     }
   },
   "item": {
@@ -139,6 +203,27 @@
       "metadata": "Thuộc tính",
       "createdAt": "Ngày tạo",
       "updatedAt": "Ngày sửa"
+    },
+    "slot": {
+      "attack": "Vũ khí tấn công",
+      "magic": "Vũ khí phép",
+      "shield": "Khiên",
+      "helmet": "Mũ",
+      "armor": "Giáp",
+      "boots": "Giày",
+      "glove": "Găng tay",
+      "ring": "Nhẫn",
+      "amulet": "Bùa hộ mệnh",
+      "earring": "Hoa tai",
+      "bracelet": "Vòng tay"
+    },
+    "source": {
+      "system": "Hệ thống",
+      "drop": "Drop",
+      "gacha": "Gacha",
+      "shop": "Cửa hàng",
+      "quest": "Nhiệm vụ",
+      "craft": "Chế tạo"
     }
   },
   "battleItem": {

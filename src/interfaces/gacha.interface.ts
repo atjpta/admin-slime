@@ -1,7 +1,8 @@
 import type { BaseResource } from '@/interfaces/base-resource.interface'
 import type { PaginationFilter } from '@/interfaces/pagination.interface'
 import type { GachaStatus, DrawType, GachaRewardType, CurrencyCode } from '@/enums/gacha.enum'
-import type { ItemRarity, ItemStatus, ItemType } from '@/enums/item.enum'
+import type { ItemRarity, ItemType } from '@/enums/item.enum'
+import type { Item } from '@/interfaces/item.interface'
 
 export interface UpdateGachaRewardsDto {
   itemCodes?: string[]
@@ -20,16 +21,7 @@ export interface GachaRarity {
   rate: number
 }
 
-export interface GachaRewardItem {
-  _id: string
-  code: string
-  type: ItemType
-  rarity: ItemRarity
-  status: ItemStatus
-  sellPrice: number
-  stackable: boolean
-  metadata: Record<string, unknown>
-}
+export type GachaRewardItem = Item
 
 export interface Gacha extends BaseResource {
   code: string

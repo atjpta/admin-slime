@@ -37,7 +37,7 @@ watch(
       searched.value = false
       if (debounceTimer) clearTimeout(debounceTimer)
     }
-  },
+  }
 )
 
 watch(searchCode, (val) => {
@@ -68,7 +68,7 @@ async function search() {
 }
 
 function select(item: Item) {
-  emit('add', { _id: item._id, code: item.code, type: item.type, rarity: item.rarity })
+  emit('add', item)
   emit('close')
 }
 
@@ -86,7 +86,7 @@ function isAdded(code: string) {
         v-model="searchCode"
         type="text"
         :placeholder="t('gacha.rewards.searchPlaceholder')"
-        class="input input-bordered w-full mb-4"
+        class="input input-bordered mb-4 w-full"
       />
 
       <div class="min-h-32">
@@ -96,7 +96,7 @@ function isAdded(code: string) {
 
         <template v-else-if="searched">
           <div v-if="results.length" class="max-h-72 overflow-y-auto">
-            <table class="table table-sm">
+            <table class="table-sm table">
               <thead>
                 <tr>
                   <th>{{ t('item.columns.code') }}</th>

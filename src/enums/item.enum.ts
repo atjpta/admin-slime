@@ -21,3 +21,30 @@ export const ItemStatus = {
 } as const
 
 export type ItemStatus = (typeof ItemStatus)[keyof typeof ItemStatus]
+
+export const EquipmentSlot = {
+  ATTACK: 'attack',
+  MAGIC: 'magic',
+  SHIELD: 'shield',
+  HELMET: 'helmet',
+  ARMOR: 'armor',
+  BOOTS: 'boots',
+  GLOVE: 'glove',
+  RING: 'ring',
+  AMULET: 'amulet',
+  EARRING: 'earring',
+  BRACELET: 'bracelet',
+} as const
+
+export type EquipmentSlot = (typeof EquipmentSlot)[keyof typeof EquipmentSlot]
+
+export const ItemSource = {
+  SYSTEM: 'system',
+  DROP: 'drop',
+  GACHA: 'gacha',
+  SHOP: 'shop',
+  QUEST: 'quest',
+  CRAFT: 'craft',
+} as const
+
+export type ItemSource = (typeof ItemSource)[keyof typeof ItemSource]

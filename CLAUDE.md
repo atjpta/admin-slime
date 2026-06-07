@@ -239,7 +239,7 @@ const columns = computed<ColumnDef<Item>[]>(() => [
   {
     id: 'actions',
     header: '',
-    meta: { align: 'center' },
+    meta: { align: 'center', minWidth: 'w-16' },
     cell: ({ row }) =>
       h('div', { class: 'flex justify-center gap-1' }, [
         h(VButton, {
@@ -330,6 +330,23 @@ const { table, page, pageSize, search, loading } = useDataTable({
   }
 }
 ```
+
+---
+
+## Quy tắc chung
+
+**Event handler gọi nhiều hàm:** Nếu một event handler cần gọi ≥ 2 hàm, tạo wrapper function trong script thay vì viết inline arrow function trong template.
+
+```vue
+<!-- sai -->
+@updated="() => { refreshA(); refreshB(); refreshC() }"
+
+<!-- đúng -->
+async function onSomethingUpdated() { await Promise.all([refreshA(), refreshB(), refreshC()]) } ...
+@updated="onSomethingUpdated"
+```
+
+---
 
 ### useDataTable — những gì tự xử lý
 

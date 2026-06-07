@@ -13,6 +13,7 @@ export const RouteName = {
   Users: 'users',
   Admins: 'admins',
   Players: 'players',
+  PlayerDetail: 'player-detail',
   Items: 'items',
   BattleItems: 'battle-items',
   Gachas: 'gachas',
@@ -77,6 +78,18 @@ const router = createRouter({
             breadcrumbs: [
               { labelKey: 'nav.userManagement' },
               { labelKey: 'nav.players', routeName: RouteName.Players },
+            ],
+          },
+        },
+        {
+          path: 'players/:id',
+          name: RouteName.PlayerDetail,
+          component: () => import('@/pages/players/detail/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.userManagement' },
+              { labelKey: 'nav.players', routeName: RouteName.Players },
+              { labelKey: 'player.detail.title' },
             ],
           },
         },

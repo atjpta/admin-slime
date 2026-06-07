@@ -3,8 +3,10 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
-import { PlusIcon, TrashIcon, SquarePenIcon, RotateCcwIcon, ChevronDownIcon, ZapIcon } from '@lucide/vue'
+import { PlusIcon, TrashIcon, SquarePenIcon, ChevronDownIcon, ZapIcon } from '@lucide/vue'
 import VButton from '@/components/ui/btn/v-button.vue'
+import VTableToolbar from '@/components/ui/table/v-table-toolbar.vue'
+import VSelectFilter from '@/components/ui/select/v-select-filter.vue'
 import VGachaStatusBadge from '@/components/ui/badge/v-gacha-status-badge.vue'
 import GachaEditModal from '../components/gacha-edit-modal.vue'
 import GachaRewardAddModal from '../components/gacha-reward-add-modal.vue'
@@ -51,9 +53,6 @@ const showAddRewardModal = ref(false)
 const showQuickAddRewardModal = ref(false)
 
 const rewardFilter = ref({ search: '', type: '' as ItemType | '', rarity: '' as ItemRarity | '' })
-const hasRewardFilter = computed(
-  () => !!(rewardFilter.value.search || rewardFilter.value.type || rewardFilter.value.rarity)
-)
 const filteredRewards = computed(() => {
   let list = pendingRewards.value
   const { search, type, rarity } = rewardFilter.value
@@ -63,9 +62,6 @@ const filteredRewards = computed(() => {
   return list
 })
 
-function resetRewardFilter() {
-  rewardFilter.value = { search: '', type: '', rarity: '' }
-}
 
 const ALL_RARITIES = [
   ItemRarity.COMMON,
@@ -401,32 +397,16 @@ async function quickAddRewards(types: ItemType[], rarities: ItemRarity[]) {
               </VButton>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2">
-              <input
-                v-model="rewardFilter.search"
-                type="text"
-                :placeholder="t('common.search')"
-                class="input input-bordered input-sm w-40"
-              />
-              <select v-model="rewardFilter.type" class="select select-bordered select-sm w-36">
-                <option value="">{{ t('item.columns.type') }}</option>
-                <option v-for="v in ItemType" :key="v" :value="v">{{ t(`item.type.${v}`) }}</option>
-              </select>
-              <select v-model="rewardFilter.rarity" class="select select-bordered select-sm w-36">
-                <option value="">{{ t('item.columns.rarity') }}</option>
-                <option v-for="v in ItemRarity" :key="v" :value="v">
-                  {{ t(`item.rarity.${v}`) }}
-                </option>
-              </select>
-              <VButton
-                v-if="hasRewardFilter"
-                :icon="RotateCcwIcon"
-                class="btn-ghost btn-sm"
-                @click="resetRewardFilter"
-              >
-                {{ t('table.resetFilters') }}
-              </VButton>
-            </div>
+            <VTableToolbar
+              v-model="rewardFilter.search"
+              :active-filters="!!(rewardFilter.type || rewardFilter.rarity)"
+              @reset="rewardFilter.type = ''; rewardFilter.rarity = ''"
+            >
+              <template #filters>
+                <VSelectFilter v-model="rewardFilter.type" :label="t('item.columns.type')" :enum-values="ItemType" i18n-key="item.type" />
+                <VSelectFilter v-model="rewardFilter.rarity" :label="t('item.columns.rarity')" :enum-values="ItemRarity" i18n-key="item.rarity" />
+              </template>
+            </VTableToolbar>
 
             <div class="overflow-x-auto">
               <table class="table-sm table">

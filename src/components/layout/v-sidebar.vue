@@ -47,6 +47,7 @@ const NAV: NavItem[] = [
         icon: JoystickIcon,
         iconClass: 'text-rose-500',
         routeName: RouteName.Players,
+        activeFor: [RouteName.PlayerDetail],
       },
     ],
   },

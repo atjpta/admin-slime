@@ -4,11 +4,13 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { RouteName } from '@/router'
 import type { ColumnDef } from '@tanstack/vue-table'
+import { EyeIcon } from '@lucide/vue'
 import { useDataTable } from '@/composables/useDataTable'
 import VTable from '@/components/ui/table/v-table.vue'
 import VTableToolbar from '@/components/ui/table/v-table-toolbar.vue'
 import VPagination from '@/components/ui/pagination/v-pagination.vue'
 import VSelectFilter from '@/components/ui/select/v-select-filter.vue'
+import VButton from '@/components/ui/btn/v-button.vue'
 import VPlayerStatusBadge from '@/components/ui/badge/v-player-status-badge.vue'
 import VPlayerRoleBadge from '@/components/ui/badge/v-player-role-badge.vue'
 import { playerService } from '@/services/api/player.service'
@@ -43,7 +45,7 @@ const columns = computed<ColumnDef<Player>[]>(() => [
           class: 'text-primary hover:underline cursor-pointer text-sm',
           onClick: () => router.push({ name: RouteName.Users, query: { search: email } }),
         },
-        email,
+        email
       )
     },
     meta: { minWidth: 'w-52' },
@@ -71,6 +73,18 @@ const columns = computed<ColumnDef<Player>[]>(() => [
     header: t('player.columns.updatedAt'),
     cell: ({ row }) => formatDate(row.getValue('updatedAt')),
     meta: { align: 'center', minWidth: 'w-40' },
+  },
+  {
+    id: 'actions',
+    header: '',
+    meta: { align: 'center', minWidth: 'w-16' },
+    cell: ({ row }) =>
+      h(VButton, {
+        icon: EyeIcon,
+        class: 'btn-ghost text-info',
+        onClick: () =>
+          router.push({ name: RouteName.PlayerDetail, params: { id: row.original._id } }),
+      }),
   },
 ])
 
