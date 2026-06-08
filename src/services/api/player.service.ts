@@ -7,6 +7,8 @@ import type {
   PlayerEquipment,
   PlayerStatsResult,
   AddInventoryItemDto,
+  PlayerMailAdminItem,
+  PlayerMailFilter,
 } from '@/interfaces/player.interface'
 import { BaseApi } from '@/services/api/base-api.service'
 
@@ -41,6 +43,11 @@ class PlayerService extends BaseApi {
   async addInventoryItem(id: string, dto: AddInventoryItemDto) {
     const res = await this.http.post(`${this.url}/${id}/inventory`, { body: dto })
     return this.unwrap(res)
+  }
+
+  async getMails(playerId: string, filter: PlayerMailFilter) {
+    const res = await this.http.get(`${this.url}/${playerId}/mails`, { query: filter })
+    return this.unwrap<Pagination<PlayerMailAdminItem[]>>(res)
   }
 
   async removeInventoryItem(playerId: string, itemId: string) {

@@ -333,6 +333,131 @@ const { table, page, pageSize, search, loading } = useDataTable({
 
 ---
 
+## Detail Page Pattern
+
+Tất cả page detail (route `/<resource>/:id`) phải theo layout này. Tham khảo `src/pages/players/detail/` và `src/pages/gachas/detail/`.
+
+### Cấu trúc file
+
+```
+src/pages/<resource>/detail/
+├── index.vue                        ← layout + tabs logic
+└── components/
+    ├── <resource>-info-card.vue     ← full-width info card
+    └── <resource>-<section>.vue     ← nội dung từng tab section
+```
+
+### Template layout
+
+```vue
+<template>
+  <div class="flex flex-col gap-6">
+    <div v-if="loading" class="flex justify-center py-16">
+      <span class="loading loading-spinner loading-lg"></span>
+    </div>
+
+    <template v-else-if="detail">
+      <!-- 1. Info card (tên, ID, field, nút edit nếu có — tất cả trong đây) -->
+      <ResourceInfoCard :detail="detail" @edit="..." />
+
+      <!-- 2. Tabbed sections -->
+      <div class="card bg-base-100 shadow-sm">
+        <div class="card-body p-4">
+          <div role="tablist" class="tabs tabs-border mb-4">
+            <VButton
+              v-for="tab in tabs"
+              :key="tab.key"
+              role="tab"
+              class="tab border-0 bg-transparent"
+              :class="{ 'tab-active': activeTab === tab.key }"
+              @click="activeTab = tab.key"
+            >
+              {{ tab.label }}
+              <span v-if="'count' in tab" class="badge badge-sm ml-1.5">{{ tab.count }}</span>
+            </VButton>
+          </div>
+          <div class="flex flex-col gap-4">
+            <div :class="sectionOrder('tab1')" class="rounded-box border-base-200 border p-4">
+              <Tab1Section :detail="detail" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>
+```
+
+### Script tabs pattern
+
+```ts
+type Tab = 'tab1' | 'tab2' | 'tab3'
+const activeTab = ref<Tab>('tab1')
+
+const tabs = computed(() => [
+  { key: 'tab1' as Tab, label: t('resource.tabs.tab1') },
+  { key: 'tab2' as Tab, label: t('resource.tabs.tab2'), count: list.value.length },
+])
+
+function sectionOrder(tab: Tab) {
+  return activeTab.value === tab ? 'order-first' : 'order-last'
+}
+```
+
+### Info card pattern
+
+```vue
+<template>
+  <div class="card bg-base-100 shadow-sm">
+    <div class="card-body p-5">
+      <div class="grid grid-cols-2 gap-x-8 gap-y-3 text-sm sm:grid-cols-3 lg:grid-cols-6">
+        <div class="flex flex-col gap-0.5">
+          <span class="text-base-content/50 text-xs">{{ t('resource.columns.field') }}</span>
+          <span class="font-medium">{{ detail.field }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+### Info card pattern
+
+Info card chứa tất cả: tên resource, ID mono, các field chính, và nút edit (nếu có). Không có header riêng bên ngoài card.
+
+```vue
+<template>
+  <div class="card bg-base-100 shadow-sm">
+    <div class="card-body p-5">
+      <div class="flex items-start justify-between">
+        <div>
+          <h1 class="text-xl font-semibold">{{ detail.name }}</h1>
+          <p class="text-base-content/50 font-mono text-sm">{{ detail._id }}</p>
+        </div>
+        <!-- nút edit nếu có -->
+        <VButton :icon="SquarePenIcon" class="btn-primary btn-sm" @click="emit('edit')" />
+      </div>
+      <!-- grid các field -->
+      <div class="mt-4 grid grid-cols-2 gap-x-8 gap-y-3 text-sm sm:grid-cols-3 lg:grid-cols-6">
+        <div class="flex flex-col gap-0.5">
+          <span class="text-base-content/50 text-xs">{{ t('resource.columns.field') }}</span>
+          <span class="font-medium">{{ detail.field }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+### Quy tắc
+
+- **Không** có header riêng ngoài card — tên, ID, nút edit đều nằm trong info card
+- **Không** có back button — điều hướng qua sidebar
+- **Không** dùng tiêu đề "Chi tiết X" — hiển thị tên/code của chính resource
+- Tab section components **không** bọc thêm `card`/`card-body` — root element là `<div class="flex flex-col gap-4">`
+
+---
+
 ## Quy tắc chung
 
 **Event handler gọi nhiều hàm:** Nếu một event handler cần gọi ≥ 2 hàm, tạo wrapper function trong script thay vì viết inline arrow function trong template.

@@ -9,7 +9,7 @@ import VButton from '@/components/ui/btn/v-button.vue'
 import VPagination from '@/components/ui/pagination/v-pagination.vue'
 import VItemTypeBadge from '@/components/ui/badge/v-item-type-badge.vue'
 import VItemRarityBadge from '@/components/ui/badge/v-item-rarity-badge.vue'
-import PlayerItemDetailModal from './player-item-detail-modal.vue'
+import VItemDetailModal from '@/components/ui/modal/v-item-detail-modal.vue'
 import VConfirmModal from '@/components/ui/modal/v-confirm-modal.vue'
 import VTableToolbar from '@/components/ui/table/v-table-toolbar.vue'
 import VSelectFilter from '@/components/ui/select/v-select-filter.vue'
@@ -194,10 +194,9 @@ const table = useVueTable({
   <VTable :table="table" />
   <VPagination v-model:page="page" v-model:page-size="pageSize" :total="total" class="mt-3" />
 
-  <PlayerItemDetailModal
-    :open="!!modal"
+  <VItemDetailModal
     :item="modal?.item ?? null"
-    :instance-meta="modal?.instanceMeta"
+    :rarity-stats="modal?.instanceMeta?.rarityStats ?? null"
     @close="modal = null"
   />
   <VConfirmModal

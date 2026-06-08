@@ -21,7 +21,12 @@
     "view": "Xem",
     "create": "Tạo mới",
     "select": "Chọn",
-    "confirm": "Xác nhận"
+    "confirm": "Xác nhận",
+    "noExpiry": "Không hết hạn",
+    "langVi": "Tiếng Việt",
+    "langEn": "Tiếng Anh",
+    "noResults": "Không có kết quả",
+    "translate": "Dịch từ {lang}"
   },
   "nav": {
     "dashboard": "Tổng quan",
@@ -34,6 +39,9 @@
     "battleItems": "Vật phẩm chiến đấu",
     "gachaManagement": "Quản lý Gacha",
     "gachas": "Banner Gacha",
+    "mailManagement": "Quản lý thư",
+    "mails": "Thư hệ thống",
+    "mailTemplates": "Mẫu thư",
     "settings": "Cài đặt"
   },
   "validation": {
@@ -112,6 +120,17 @@
       "createdAt": "Ngày tạo",
       "updatedAt": "Ngày cập nhật"
     },
+    "mails": "Thư",
+    "mailReceived": "Đã nhận",
+    "mailSent": "Đã gửi",
+    "mailFrom": "Từ",
+    "mailTo": "Đến",
+    "mailStatus": {
+      "unread": "Chưa đọc",
+      "read": "Đã đọc",
+      "claimed": "Đã nhận",
+      "deleted": "Đã xóa"
+    },
     "detail": {
       "title": "Chi tiết người chơi",
       "stats": "Chỉ số",
@@ -134,7 +153,8 @@
       "unequip": "Tháo",
       "changeEquip": "Thay",
       "baseStats": "Chỉ số cơ bản",
-      "rarityStats": "Chỉ số độ hiếm"
+      "rarityStats": "Chỉ số độ hiếm",
+      "claimedAt": "Ngày nhận"
     },
     "addItem": {
       "title": "Thêm vật phẩm vào túi đồ",
@@ -334,5 +354,105 @@
     "password": "Mật khẩu",
     "email": "Email",
     "welcomeBack": "Chào mừng trở lại"
+  },
+  "mailTemplate": {
+    "title": "Mẫu thư",
+    "subtitle": "Quản lý các mẫu thư để gửi nhanh",
+    "columns": {
+      "name": "Tên mẫu",
+      "title": "Tiêu đề (VI)",
+      "expirationDuration": "Hạn (ngày)",
+      "createdAt": "Ngày tạo"
+    },
+    "create": {
+      "title": "Tạo mẫu thư mới",
+      "success": "Tạo mẫu thư thành công"
+    },
+    "edit": {
+      "title": "Chỉnh sửa mẫu thư",
+      "success": "Cập nhật mẫu thư thành công"
+    },
+    "delete": {
+      "title": "Xóa mẫu thư",
+      "message": "Bạn có chắc muốn xóa mẫu thư \"{name}\" không?",
+      "success": "Xóa mẫu thư thành công"
+    },
+    "fields": {
+      "name": "Tên mẫu",
+      "title": "Tiêu đề",
+      "content": "Nội dung",
+      "title": "Tiêu đề (Tiếng Việt)",
+      "title": "Tiêu đề (Tiếng Anh)",
+      "content": "Nội dung (Tiếng Việt)",
+      "content": "Nội dung (Tiếng Anh)",
+      "expirationDuration": "Thời hạn (ngày)"
+    }
+  },
+  "mail": {
+    "title": "Thư hệ thống",
+    "subtitle": "Gửi thư và phần thưởng cho người chơi",
+    "source": {
+      "system": "Hệ thống",
+      "player": "Người chơi"
+    },
+    "columns": {
+      "title": "Tiêu đề (VI)",
+      "source": "Nguồn",
+      "receivers": "Người nhận",
+      "expiredAt": "Hết hạn",
+      "sendToNewPlayers": "Người chơi mới",
+      "createdAt": "Ngày gửi",
+      "status": "Trạng thái"
+    },
+    "send": {
+      "title": "Gửi thư mới",
+      "success": "Gửi thư thành công"
+    },
+    "delete": {
+      "title": "Xóa thư",
+      "message": "Bạn có chắc muốn xóa thư này không?",
+      "success": "Xóa thư thành công"
+    },
+    "fields": {
+      "useTemplate": "Dùng mẫu thư",
+      "templateId": "Chọn mẫu thư",
+      "title": "Tiêu đề",
+      "content": "Nội dung",
+      "expirationDuration": "Thời hạn (ngày)",
+      "receivers": "Người nhận",
+      "receiversAll": "Tất cả người chơi",
+      "receiversCustom": "Chọn theo ID",
+      "receiversPlaceholder": "Nhập player ID, mỗi ID một dòng...",
+      "sendToNewPlayers": "Gửi cho người chơi mới",
+      "saveAsTemplate": "Lưu thành mẫu thư",
+      "templateName": "Tên mẫu",
+      "rewards": "Phần thưởng",
+      "addCurrency": "Thêm tiền tệ",
+      "currencyType": "Loại",
+      "currencyValue": "Số lượng",
+      "addItem": "Thêm vật phẩm",
+      "itemCode": "Mã vật phẩm",
+      "itemCodePlaceholder": "Nhập mã item...",
+      "itemFind": "Tìm",
+      "itemNotFound": "Không tìm thấy item",
+      "itemQuantity": "Số lượng",
+      "itemSource": "Nguồn",
+      "noRewards": "Không có phần thưởng",
+      "sendToNewPlayersDesc": "Tự động gửi cho người chơi đăng ký mới"
+    },
+    "receiversCount": "{n} người chơi",
+    "detail": {
+      "title": "Chi tiết thư",
+      "info": "Thông tin",
+      "content": "Nội dung",
+      "rewards": "Phần thưởng",
+      "receivers": "Danh sách người nhận",
+      "noRewards": "Không có phần thưởng",
+      "edit": {
+        "success": "Cập nhật thư thành công"
+      },
+      "rewardsCurrency": "Tiền tệ",
+      "rewardsItems": "Vật phẩm"
+    }
   }
 }

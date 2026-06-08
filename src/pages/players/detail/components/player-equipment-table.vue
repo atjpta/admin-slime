@@ -8,7 +8,7 @@ import VTable from '@/components/ui/table/v-table.vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import VItemRarityBadge from '@/components/ui/badge/v-item-rarity-badge.vue'
 import VConfirmModal from '@/components/ui/modal/v-confirm-modal.vue'
-import PlayerItemDetailModal from './player-item-detail-modal.vue'
+import VItemDetailModal from '@/components/ui/modal/v-item-detail-modal.vue'
 import PlayerEquipModal from './player-equip-modal.vue'
 import { playerService } from '@/services/api/player.service'
 import { EquipmentSlot } from '@/enums/item.enum'
@@ -175,10 +175,9 @@ const table = useVueTable({
 <template>
   <VTable :table="table" />
 
-  <PlayerItemDetailModal
-    :open="!!detailModal"
+  <VItemDetailModal
     :item="detailModal?.item ?? null"
-    :instance-meta="detailModal?.instanceMeta"
+    :rarity-stats="detailModal?.instanceMeta?.rarityStats ?? null"
     @close="detailModal = null"
   />
 

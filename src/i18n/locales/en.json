@@ -21,7 +21,12 @@
     "view": "View",
     "create": "Create",
     "select": "Select",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "noExpiry": "No expiry",
+    "langVi": "Vietnamese",
+    "langEn": "English",
+    "noResults": "No results",
+    "translate": "Translate from {lang}"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -34,6 +39,9 @@
     "battleItems": "Battle Items",
     "gachaManagement": "Gacha Management",
     "gachas": "Gacha Banners",
+    "mailManagement": "Mail Management",
+    "mails": "System Mail",
+    "mailTemplates": "Mail Templates",
     "settings": "Settings"
   },
   "validation": {
@@ -112,6 +120,17 @@
       "createdAt": "Created At",
       "updatedAt": "Updated At"
     },
+    "mails": "Mails",
+    "mailReceived": "Received",
+    "mailSent": "Sent",
+    "mailFrom": "From",
+    "mailTo": "To",
+    "mailStatus": {
+      "unread": "Unread",
+      "read": "Read",
+      "claimed": "Claimed",
+      "deleted": "Deleted"
+    },
     "detail": {
       "title": "Player Detail",
       "stats": "Stats",
@@ -134,7 +153,8 @@
       "unequip": "Unequip",
       "changeEquip": "Change",
       "baseStats": "Base Stats",
-      "rarityStats": "Rarity Stats"
+      "rarityStats": "Rarity Stats",
+      "claimedAt": "Claimed At"
     },
     "addItem": {
       "title": "Add Item to Inventory",
@@ -334,5 +354,105 @@
     "password": "Password",
     "email": "Email",
     "welcomeBack": "Welcome back"
+  },
+  "mailTemplate": {
+    "title": "Mail Templates",
+    "subtitle": "Manage mail templates for quick sending",
+    "columns": {
+      "name": "Template Name",
+      "title": "title",
+      "expirationDuration": "Expires (days)",
+      "createdAt": "Created At"
+    },
+    "create": {
+      "title": "Create New Template",
+      "success": "Template created successfully"
+    },
+    "edit": {
+      "title": "Edit Template",
+      "success": "Template updated successfully"
+    },
+    "delete": {
+      "title": "Delete Template",
+      "message": "Are you sure you want to delete template \"{name}\"?",
+      "success": "Template deleted successfully"
+    },
+    "fields": {
+      "name": "Template Name",
+      "title": "Title",
+      "content": "Content",
+      "title": "Title (Vietnamese)",
+      "title": "Title (English)",
+      "content": "Content (Vietnamese)",
+      "content": "Content (English)",
+      "expirationDuration": "Expiration (days)"
+    }
+  },
+  "mail": {
+    "title": "System Mail",
+    "subtitle": "Send mails and rewards to players",
+    "source": {
+      "system": "System",
+      "player": "Player"
+    },
+    "columns": {
+      "title": "title",
+      "source": "Source",
+      "receivers": "Recipients",
+      "expiredAt": "Expires At",
+      "sendToNewPlayers": "New Players",
+      "createdAt": "Sent At",
+      "status": "Status"
+    },
+    "send": {
+      "title": "Send New Mail",
+      "success": "Mail sent successfully"
+    },
+    "delete": {
+      "title": "Delete Mail",
+      "message": "Are you sure you want to delete this mail?",
+      "success": "Mail deleted successfully"
+    },
+    "fields": {
+      "useTemplate": "Use Template",
+      "templateId": "Select Template",
+      "title": "Title",
+      "content": "Content",
+      "expirationDuration": "Expiration (days)",
+      "receivers": "Recipients",
+      "receiversAll": "All players",
+      "receiversCustom": "Custom IDs",
+      "receiversPlaceholder": "Enter player IDs, one per line...",
+      "sendToNewPlayers": "Send to new players",
+      "saveAsTemplate": "Save as template",
+      "templateName": "Template name",
+      "rewards": "Rewards",
+      "addCurrency": "Add currency",
+      "currencyType": "Type",
+      "currencyValue": "Amount",
+      "addItem": "Add item",
+      "itemCode": "Item code",
+      "itemCodePlaceholder": "Enter item code...",
+      "itemFind": "Find",
+      "itemNotFound": "Item not found",
+      "itemQuantity": "Quantity",
+      "itemSource": "Source",
+      "noRewards": "No rewards",
+      "sendToNewPlayersDesc": "Automatically send to newly registered players"
+    },
+    "receiversCount": "{n} players",
+    "detail": {
+      "title": "Mail Detail",
+      "info": "Info",
+      "content": "Content",
+      "rewards": "Rewards",
+      "receivers": "Recipients",
+      "noRewards": "No rewards",
+      "edit": {
+        "success": "Mail updated successfully"
+      },
+      "rewardsCurrency": "Currency",
+      "rewardsItems": "Items"
+    }
   }
 }

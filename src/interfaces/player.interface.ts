@@ -3,6 +3,8 @@ import type { PaginationFilter } from '@/interfaces/pagination.interface'
 import type { PlayerRole, PlayerStatus } from '@/enums/player.enum'
 import type { ItemRarity, ItemStatus, ItemType, EquipmentSlot, ItemSource } from '@/enums/item.enum'
 import type { StatKey, StatType, StatSource } from '@/enums/stat.enum'
+import type { MailStatus } from '@/enums/mail.enum'
+import type { LocalizedString, MailRewards } from '@/interfaces/mail.interface'
 
 export interface Player extends BaseResource {
   name: string
@@ -121,4 +123,26 @@ export interface PlayerStatsSummary {
 export interface PlayerStatsResult {
   stats: PlayerStatsSummary
   statsDetail: PlayerStat[]
+}
+
+export interface PlayerMailAdminItem extends BaseResource {
+  status: MailStatus
+  claimedAt: string | null
+  expiredAt: string | null
+  sender: { _id: string; name: string } | null
+  receiver: { _id: string; name: string }
+  mail: {
+    _id: string
+    title: LocalizedString
+    content: LocalizedString
+    rewards: MailRewards
+    expiredAt: string | null
+    source: string
+    sendToNewPlayers: boolean
+  }
+}
+
+export interface PlayerMailFilter extends PaginationFilter {
+  status?: MailStatus
+  type?: 'sent' | 'received'
 }

@@ -18,6 +18,9 @@ export const RouteName = {
   BattleItems: 'battle-items',
   Gachas: 'gachas',
   GachaDetail: 'gacha-detail',
+  Mails: 'mails',
+  MailDetail: 'mail-detail',
+  MailTemplates: 'mail-templates',
 } as const
 
 const router = createRouter({
@@ -135,6 +138,40 @@ const router = createRouter({
               { labelKey: 'nav.gachaManagement' },
               { labelKey: 'nav.gachas', routeName: RouteName.Gachas },
               { labelKey: 'gacha.detail.title' },
+            ],
+          },
+        },
+        {
+          path: 'mails',
+          name: RouteName.Mails,
+          component: () => import('@/pages/mails/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.mailManagement' },
+              { labelKey: 'nav.mails', routeName: RouteName.Mails },
+            ],
+          },
+        },
+        {
+          path: 'mails/:id',
+          name: RouteName.MailDetail,
+          component: () => import('@/pages/mails/detail/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.mailManagement' },
+              { labelKey: 'nav.mails', routeName: RouteName.Mails },
+              { labelKey: 'mail.detail.title' },
+            ],
+          },
+        },
+        {
+          path: 'mail-templates',
+          name: RouteName.MailTemplates,
+          component: () => import('@/pages/mail-templates/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.mailManagement' },
+              { labelKey: 'nav.mailTemplates', routeName: RouteName.MailTemplates },
             ],
           },
         },

@@ -11,6 +11,9 @@ import {
   ZapIcon,
   WandSparklesIcon,
   TicketIcon,
+  MailIcon,
+  SendIcon,
+  FileTextIcon,
 } from '@lucide/vue'
 import type { NavItem } from '@/interfaces/nav-item.interface.ts'
 import VNavItem from './v-nav-item.vue'
@@ -81,6 +84,26 @@ const NAV: NavItem[] = [
         iconClass: 'text-pink-500',
         routeName: RouteName.Gachas,
         activeFor: [RouteName.GachaDetail],
+      },
+    ],
+  },
+  {
+    labelKey: 'nav.mailManagement',
+    icon: MailIcon,
+    iconClass: 'text-slate-400',
+    children: [
+      {
+        labelKey: 'nav.mails',
+        icon: SendIcon,
+        iconClass: 'text-emerald-500',
+        routeName: RouteName.Mails,
+        activeFor: [RouteName.MailDetail],
+      },
+      {
+        labelKey: 'nav.mailTemplates',
+        icon: FileTextIcon,
+        iconClass: 'text-teal-500',
+        routeName: RouteName.MailTemplates,
       },
     ],
   },

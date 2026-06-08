@@ -5,16 +5,17 @@ import { useI18n } from 'vue-i18n'
 import { PlusIcon } from '@lucide/vue'
 import { playerService } from '@/services/api/player.service'
 import { RouteName } from '@/router'
-import VPlayerStatusBadge from '@/components/ui/badge/v-player-status-badge.vue'
-import VPlayerRoleBadge from '@/components/ui/badge/v-player-role-badge.vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import VSection from '@/components/ui/section/v-section.vue'
+import VDetailSkeleton from '@/components/ui/skeleton/v-detail-skeleton.vue'
+import { useDetailLoading } from '@/composables/useDetailLoading'
 import PlayerInfoCard from './components/player-info-card.vue'
 import PlayerStatsSummary from './components/player-stats-summary.vue'
 import PlayerStatTable from './components/player-stat-table.vue'
 import PlayerEquipmentTable from './components/player-equipment-table.vue'
 import PlayerInventoryTable from './components/player-inventory-table.vue'
 import PlayerAddInventoryModal from './components/player-add-inventory-modal.vue'
+import PlayerMailTab from './components/player-mail-tab.vue'
 import type {
   PlayerDetail,
   PlayerInventory,
@@ -28,7 +29,7 @@ const { t } = useI18n()
 
 const id = route.params.id as string
 
-const loading = ref(true)
+const { loading, withLoading } = useDetailLoading()
 const showAddInventoryModal = ref(false)
 
 async function refreshInventory() {
@@ -51,7 +52,7 @@ const inventory = ref<PlayerInventory | null>(null)
 const equipment = ref<PlayerEquipment | null>(null)
 const statsResult = ref<PlayerStatsResult | null>(null)
 
-type Tab = 'stats-summary' | 'stats' | 'equipment' | 'inventory'
+type Tab = 'stats-summary' | 'stats' | 'equipment' | 'inventory' | 'mails'
 const activeTab = ref<Tab>('stats-summary')
 
 const tabs = computed(() => [
@@ -67,47 +68,34 @@ const tabs = computed(() => [
     label: t('player.detail.inventory'),
     count: inventory.value?.items.length ?? 0,
   },
+  { key: 'mails' as Tab, label: t('player.mails') },
 ])
 
 function sectionOrder(tab: Tab) {
   return activeTab.value === tab ? 'order-first' : 'order-last'
 }
 
-onMounted(async () => {
-  try {
-    ;[detail.value, inventory.value, equipment.value, statsResult.value] = await Promise.all([
-      playerService.getById(id),
-      playerService.getInventory(id),
-      playerService.getEquipment(id),
-      playerService.getStats(id),
-    ])
-  } catch {
-    router.replace({ name: RouteName.Players })
-  } finally {
-    loading.value = false
-  }
-})
+onMounted(() =>
+  withLoading(async () => {
+    try {
+      ;[detail.value, inventory.value, equipment.value, statsResult.value] = await Promise.all([
+        playerService.getById(id),
+        playerService.getInventory(id),
+        playerService.getEquipment(id),
+        playerService.getStats(id),
+      ])
+    } catch {
+      router.replace({ name: RouteName.Players })
+    }
+  })
+)
 </script>
 
 <template>
   <div class="flex flex-col gap-6">
-    <div v-if="loading" class="flex justify-center py-16">
-      <span class="loading loading-spinner loading-lg"></span>
-    </div>
+    <VDetailSkeleton v-if="loading" />
 
     <template v-else-if="detail">
-      <!-- Header -->
-      <div class="flex items-start justify-between">
-        <div>
-          <h1 class="text-xl font-semibold">{{ detail.name }}</h1>
-          <p class="text-base-content/50 font-mono text-sm">{{ detail._id }}</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <VPlayerRoleBadge :value="detail.role" />
-          <VPlayerStatusBadge :value="detail.status" />
-        </div>
-      </div>
-
       <!-- Info -->
       <PlayerInfoCard :detail="detail" />
 
@@ -179,6 +167,11 @@ onMounted(async () => {
                 :player-id="id"
                 @removed="refreshInventory"
               />
+            </div>
+
+            <div :class="sectionOrder('mails')" class="rounded-box border-base-200 border p-4">
+              <p class="text-base-content/70 mb-3 text-sm font-semibold">{{ t('player.mails') }}</p>
+              <PlayerMailTab :player-id="id" />
             </div>
           </div>
         </div>

@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { InfoIcon } from '@lucide/vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import VItemRarityBadge from '@/components/ui/badge/v-item-rarity-badge.vue'
-import PlayerItemDetailModal from './player-item-detail-modal.vue'
+import VItemDetailModal from '@/components/ui/modal/v-item-detail-modal.vue'
 import { playerService } from '@/services/api/player.service'
 import { ItemType } from '@/enums/item.enum'
 import type { EquipmentSlot } from '@/enums/item.enum'
@@ -108,10 +108,9 @@ function close() {
     </div>
   </dialog>
 
-  <PlayerItemDetailModal
-    :open="!!detailItem"
+  <VItemDetailModal
     :item="detailItem?.item ?? null"
-    :instance-meta="(detailItem?.metadata as EquipmentInstanceMetadata) ?? null"
+    :rarity-stats="(detailItem?.metadata as EquipmentInstanceMetadata)?.rarityStats ?? null"
     @close="detailItem = null"
   />
 </template>
