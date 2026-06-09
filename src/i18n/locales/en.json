@@ -39,8 +39,9 @@
     "battleItems": "Battle Items",
     "gachaManagement": "Gacha Management",
     "gachas": "Gacha Banners",
+    "gachaHistories": "Draw History",
     "mailManagement": "Mail Management",
-    "mails": "System Mail",
+    "mails": "Mail",
     "mailTemplates": "Mail Templates",
     "settings": "Settings"
   },
@@ -345,6 +346,22 @@
     },
     "detail": {
       "title": "Banner Detail"
+    },
+    "history": {
+      "title": "Draw History",
+      "subtitle": "View all gacha draw records in the system",
+      "columns": {
+        "player": "Player",
+        "gacha": "Banner",
+        "drawType": "Draw Type",
+        "cost": "Cost",
+        "rewards": "Rewards",
+        "createdAt": "Drawn At"
+      },
+      "rewardCount": "{n} items",
+      "rewardsModal": {
+        "title": "Draw Rewards"
+      }
     }
   },
   "auth": {
@@ -389,7 +406,7 @@
     }
   },
   "mail": {
-    "title": "System Mail",
+    "title": "Mail",
     "subtitle": "Send mails and rewards to players",
     "source": {
       "system": "System",

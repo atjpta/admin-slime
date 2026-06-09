@@ -18,6 +18,7 @@ export const RouteName = {
   BattleItems: 'battle-items',
   Gachas: 'gachas',
   GachaDetail: 'gacha-detail',
+  GachaHistories: 'gacha-histories',
   Mails: 'mails',
   MailDetail: 'mail-detail',
   MailTemplates: 'mail-templates',
@@ -138,6 +139,17 @@ const router = createRouter({
               { labelKey: 'nav.gachaManagement' },
               { labelKey: 'nav.gachas', routeName: RouteName.Gachas },
               { labelKey: 'gacha.detail.title' },
+            ],
+          },
+        },
+        {
+          path: 'gacha-histories',
+          name: RouteName.GachaHistories,
+          component: () => import('@/pages/gacha-histories/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.gachaManagement' },
+              { labelKey: 'nav.gachaHistories', routeName: RouteName.GachaHistories },
             ],
           },
         },

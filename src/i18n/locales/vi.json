@@ -39,8 +39,9 @@
     "battleItems": "Vật phẩm chiến đấu",
     "gachaManagement": "Quản lý Gacha",
     "gachas": "Banner Gacha",
+    "gachaHistories": "Lịch sử quay",
     "mailManagement": "Quản lý thư",
-    "mails": "Thư hệ thống",
+    "mails": "Thư",
     "mailTemplates": "Mẫu thư",
     "settings": "Cài đặt"
   },
@@ -345,6 +346,22 @@
     },
     "detail": {
       "title": "Chi tiết banner"
+    },
+    "history": {
+      "title": "Lịch sử quay",
+      "subtitle": "Xem toàn bộ lịch sử quay gacha trong hệ thống",
+      "columns": {
+        "player": "Người chơi",
+        "gacha": "Banner",
+        "drawType": "Loại rút",
+        "cost": "Chi phí",
+        "rewards": "Phần thưởng",
+        "createdAt": "Thời gian quay"
+      },
+      "rewardCount": "{n} vật phẩm",
+      "rewardsModal": {
+        "title": "Vật phẩm nhận được"
+      }
     }
   },
   "auth": {
@@ -389,7 +406,7 @@
     }
   },
   "mail": {
-    "title": "Thư hệ thống",
+    "title": "Thư",
     "subtitle": "Gửi thư và phần thưởng cho người chơi",
     "source": {
       "system": "Hệ thống",

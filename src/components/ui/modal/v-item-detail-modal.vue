@@ -42,11 +42,6 @@ function displayValue(value: number, type: string): string {
   if (type === StatType.PERCENT) return `+${+(value * 100).toFixed(2)}%`
   return `+${value.toLocaleString()}`
 }
-
-function displayRange(min: number, max: number, type: string): string {
-  if (type === StatType.PERCENT) return `${+(min * 100).toFixed(2)}% – ${+(max * 100).toFixed(2)}%`
-  return `${min} – ${max}`
-}
 </script>
 
 <template>

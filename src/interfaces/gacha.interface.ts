@@ -40,6 +40,40 @@ export interface GachaFilter extends PaginationFilter {
   type?: GachaRewardType
 }
 
+export interface GachaRewardLog {
+  itemId: string
+  code: string
+  type: ItemType
+  rarity: ItemRarity
+  metadata: Record<string, unknown>
+}
+
+export interface GachaHistoryPlayer {
+  _id: string
+  name: string
+}
+
+export interface GachaHistoryGacha {
+  _id: string
+  code: string
+  type: GachaRewardType
+}
+
+export interface GachaHistory {
+  _id: string
+  player: GachaHistoryPlayer
+  gacha: GachaHistoryGacha
+  drawType: DrawType
+  currencyCode: CurrencyCode
+  costAmount: number
+  rewards: GachaRewardLog[]
+  createdAt: string
+}
+
+export interface GachaHistoryFilter extends PaginationFilter {
+  drawType?: DrawType
+}
+
 export interface UpdateGachaDto {
   status?: GachaStatus
   startAt?: string

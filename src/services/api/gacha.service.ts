@@ -7,6 +7,8 @@ import type {
   UpdateGachaDto,
   CreateGachaDto,
   UpdateGachaRewardsDto,
+  GachaHistory,
+  GachaHistoryFilter,
 } from '@/interfaces/gacha.interface'
 import { BaseApi } from '@/services/api/base-api.service'
 
@@ -46,6 +48,11 @@ class GachaService extends BaseApi {
   async updateRewards(id: string, dto: UpdateGachaRewardsDto) {
     const res = await this.http.put(`${this.url}/${id}/rewards`, { body: dto })
     return this.unwrap<Gacha>(res)
+  }
+
+  async listHistories(filter: GachaHistoryFilter) {
+    const res = await this.http.get(`${this.url}/histories`, { query: filter })
+    return this.unwrap<Pagination<GachaHistory[]>>(res)
   }
 }
 
