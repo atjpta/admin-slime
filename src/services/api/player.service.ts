@@ -16,53 +16,57 @@ class PlayerService extends BaseApi {
   private url = '/admin/players'
 
   async index(filter: PlayerFilter) {
-    const res = await this.http.get(`${this.url}`, { query: filter })
-    return this.unwrap<Pagination<Player[]>>(res)
+    return this.execute<Pagination<Player[]>>(() =>
+      this.http.get<Pagination<Player[]>>(this.url, { query: filter })
+    )
   }
 
   async getById(id: string) {
-    const res = await this.http.get(`${this.url}/${id}`)
-    return this.unwrap<PlayerDetail>(res)
+    return this.execute<PlayerDetail>(() => this.http.get<PlayerDetail>(`${this.url}/${id}`))
   }
 
   async getInventory(id: string) {
-    const res = await this.http.get(`${this.url}/${id}/inventory`)
-    return this.unwrap<PlayerInventory>(res)
+    return this.execute<PlayerInventory>(() =>
+      this.http.get<PlayerInventory>(`${this.url}/${id}/inventory`)
+    )
   }
 
   async getEquipment(id: string) {
-    const res = await this.http.get(`${this.url}/${id}/equipment`)
-    return this.unwrap<PlayerEquipment>(res)
+    return this.execute<PlayerEquipment>(() =>
+      this.http.get<PlayerEquipment>(`${this.url}/${id}/equipment`)
+    )
   }
 
   async getStats(id: string) {
-    const res = await this.http.get(`${this.url}/${id}/stats`)
-    return this.unwrap<PlayerStatsResult>(res)
+    return this.execute<PlayerStatsResult>(() =>
+      this.http.get<PlayerStatsResult>(`${this.url}/${id}/stats`)
+    )
   }
 
   async addInventoryItem(id: string, dto: AddInventoryItemDto) {
-    const res = await this.http.post(`${this.url}/${id}/inventory`, { body: dto })
-    return this.unwrap(res)
+    return this.execute(() => this.http.post(`${this.url}/${id}/inventory`, { body: dto }))
   }
 
   async getMails(playerId: string, filter: PlayerMailFilter) {
-    const res = await this.http.get(`${this.url}/${playerId}/mails`, { query: filter })
-    return this.unwrap<Pagination<PlayerMailAdminItem[]>>(res)
+    return this.execute<Pagination<PlayerMailAdminItem[]>>(() =>
+      this.http.get<Pagination<PlayerMailAdminItem[]>>(`${this.url}/${playerId}/mails`, {
+        query: filter,
+      })
+    )
   }
 
   async removeInventoryItem(playerId: string, itemId: string) {
-    const res = await this.http.delete(`${this.url}/${playerId}/inventory/${itemId}`)
-    return this.unwrap(res)
+    return this.execute(() => this.http.delete(`${this.url}/${playerId}/inventory/${itemId}`))
   }
 
   async equipItem(playerId: string, dto: { slot: string; inventoryItemId: string }) {
-    const res = await this.http.post(`${this.url}/${playerId}/equipment/equip`, { body: dto })
-    return this.unwrap(res)
+    return this.execute(() =>
+      this.http.post(`${this.url}/${playerId}/equipment/equip`, { body: dto })
+    )
   }
 
   async unequipItem(playerId: string, slot: string) {
-    const res = await this.http.delete(`${this.url}/${playerId}/equipment/${slot}`)
-    return this.unwrap(res)
+    return this.execute(() => this.http.delete(`${this.url}/${playerId}/equipment/${slot}`))
   }
 }
 

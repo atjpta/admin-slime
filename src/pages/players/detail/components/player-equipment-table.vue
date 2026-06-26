@@ -50,12 +50,9 @@ async function confirmUnequip() {
   const slot = unequipTarget.value
   unequipTarget.value = null
   unEquipping.value = true
-  try {
-    await playerService.unequipItem(props.playerId, slot)
-    emit('updated')
-  } finally {
-    unEquipping.value = false
-  }
+  await playerService.unequipItem(props.playerId, slot)
+  emit('updated')
+  unEquipping.value = false
 }
 
 // --- Table ---

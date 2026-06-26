@@ -10,7 +10,7 @@ const crumbs = computed(() =>
   (route.meta.breadcrumbs ?? []).map((item) => ({
     label: t(item.labelKey),
     routeName: item.routeName,
-  })),
+  }))
 )
 </script>
 
@@ -27,7 +27,9 @@ const crumbs = computed(() =>
         </RouterLink>
         <span
           v-else
-          :class="i === crumbs.length - 1 ? 'text-base-content font-medium' : 'text-base-content/50'"
+          :class="
+            i === crumbs.length - 1 ? 'text-base-content font-medium' : 'text-base-content/50'
+          "
         >
           {{ crumb.label }}
         </span>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { EyeIcon } from '@lucide/vue'
 import { JsonViewer, type JsonValue } from '@anilkumarthakur/vue3-json-viewer'
@@ -17,6 +17,12 @@ const { t } = useI18n()
 const isDark = useDarkMode()
 
 const open = ref(false)
+const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
+
+watch(open, (v) => {
+  if (v) dialogRef.value?.showModal()
+  else dialogRef.value?.close()
+})
 
 const isEmpty = computed(() => {
   if (value == null) return true
@@ -33,10 +39,13 @@ const isEmpty = computed(() => {
       {{ t('common.view') }}
     </VButton>
 
-    <dialog class="modal" :class="{ 'modal-open': open }">
+    <dialog ref="dialog" class="modal">
       <div class="modal-box max-w-lg">
+        <div class="absolute top-3 right-3">
+          <VButton class="btn-ghost btn-circle" @click="open = false"> ✕ </VButton>
+        </div>
         <h3 class="mb-4 text-lg font-semibold">{{ title ?? t('common.detail') }}</h3>
-        <div class="max-h-[60vh] overflow-auto rounded-lg">
+        <div class="-mx-6 max-h-[50dvh] overflow-y-auto px-6">
           <JsonViewer :data="value as JsonValue" :dark-mode="isDark" :expanded="true" />
         </div>
         <div class="modal-action">

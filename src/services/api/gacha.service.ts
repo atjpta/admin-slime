@@ -16,43 +16,45 @@ class GachaService extends BaseApi {
   private url = '/admin/gachas'
 
   async index(filter: GachaFilter) {
-    const res = await this.http.get(this.url, { query: filter })
-    return this.unwrap<Pagination<Gacha[]>>(res)
+    return this.execute<Pagination<Gacha[]>>(() =>
+      this.http.get<Pagination<Gacha[]>>(this.url, { query: filter })
+    )
   }
 
   async getById(id: string) {
-    const res = await this.http.get(`${this.url}/${id}`)
-    return this.unwrap<Gacha>(res)
+    return this.execute<Gacha>(() => this.http.get<Gacha>(`${this.url}/${id}`))
   }
 
   async create(dto: CreateGachaDto) {
-    const res = await this.http.post(this.url, { body: dto })
-    return this.unwrap<Gacha>(res)
+    return this.execute<Gacha>(() => this.http.post<Gacha>(this.url, { body: dto }))
   }
 
   async update(id: string, dto: UpdateGachaDto) {
-    const res = await this.http.put(`${this.url}/${id}`, { body: dto })
-    return this.unwrap<Gacha>(res)
+    return this.execute<Gacha>(() => this.http.put<Gacha>(`${this.url}/${id}`, { body: dto }))
   }
 
   async updateCosts(id: string, costs: GachaCost[]) {
-    const res = await this.http.put(`${this.url}/${id}/costs`, { body: { costs } })
-    return this.unwrap<Gacha>(res)
+    return this.execute<Gacha>(() =>
+      this.http.put<Gacha>(`${this.url}/${id}/costs`, { body: { costs } })
+    )
   }
 
   async updateRarities(id: string, rarities: GachaRarity[]) {
-    const res = await this.http.put(`${this.url}/${id}/rarities`, { body: { rarities } })
-    return this.unwrap<Gacha>(res)
+    return this.execute<Gacha>(() =>
+      this.http.put<Gacha>(`${this.url}/${id}/rarities`, { body: { rarities } })
+    )
   }
 
   async updateRewards(id: string, dto: UpdateGachaRewardsDto) {
-    const res = await this.http.put(`${this.url}/${id}/rewards`, { body: dto })
-    return this.unwrap<Gacha>(res)
+    return this.execute<Gacha>(() =>
+      this.http.put<Gacha>(`${this.url}/${id}/rewards`, { body: dto })
+    )
   }
 
   async listHistories(filter: GachaHistoryFilter) {
-    const res = await this.http.get(`${this.url}/histories`, { query: filter })
-    return this.unwrap<Pagination<GachaHistory[]>>(res)
+    return this.execute<Pagination<GachaHistory[]>>(() =>
+      this.http.get<Pagination<GachaHistory[]>>(`${this.url}/histories`, { query: filter })
+    )
   }
 }
 

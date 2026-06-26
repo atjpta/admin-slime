@@ -29,7 +29,11 @@ const activeTab = ref<Tab>('costs')
 const tabs = computed(() => [
   { key: 'costs' as Tab, label: t('gacha.tabs.costs'), count: detail.value?.costs.length ?? 0 },
   { key: 'rarities' as Tab, label: t('gacha.tabs.rarities') },
-  { key: 'rewards' as Tab, label: t('gacha.tabs.rewards'), count: detail.value?.listReward.length ?? 0 },
+  {
+    key: 'rewards' as Tab,
+    label: t('gacha.tabs.rewards'),
+    count: detail.value?.listReward.length ?? 0,
+  },
 ])
 function sectionOrder(tab: Tab) {
   return activeTab.value === tab ? 'order-first' : 'order-last'

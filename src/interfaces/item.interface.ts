@@ -3,6 +3,12 @@ import type { StatKey, StatType } from '@/enums/stat.enum'
 import type { BaseResource } from '@/interfaces/base-resource.interface'
 import type { PaginationFilter } from '@/interfaces/pagination.interface'
 
+export interface EquipmentStat {
+  stat: StatKey
+  type: StatType
+  value: number
+}
+
 export interface RollStatConfig {
   stat: StatKey
   type: StatType
@@ -17,7 +23,7 @@ export interface RollConfig {
 
 export interface ItemEquipmentMetadata {
   slot: string
-  stats: { stat: StatKey; type: StatType; value: number }[]
+  stats: EquipmentStat[]
   rollConfig?: RollConfig
 }
 

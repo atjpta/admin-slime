@@ -6,8 +6,9 @@ class BattleItemService extends BaseApi {
   private url = '/admin/battle-items'
 
   async index(filter: BattleItemFilter) {
-    const res = await this.http.get(`${this.url}`, { query: filter })
-    return this.unwrap<Pagination<BattleItem[]>>(res)
+    return this.execute<Pagination<BattleItem[]>>(() =>
+      this.http.get<Pagination<BattleItem[]>>(this.url, { query: filter })
+    )
   }
 }
 

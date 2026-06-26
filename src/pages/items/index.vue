@@ -11,16 +11,39 @@ import VItemRarityBadge from '@/components/ui/badge/v-item-rarity-badge.vue'
 import VItemTypeBadge from '@/components/ui/badge/v-item-type-badge.vue'
 import VItemStatusBadge from '@/components/ui/badge/v-item-status-badge.vue'
 import VJsonView from '@/components/ui/json/v-json-view.vue'
+import VButton from '@/components/ui/btn/v-button.vue'
+import ItemEquipmentModal from './components/item-equipment-modal.vue'
+import ItemInfoEditModal from './components/item-info-edit-modal.vue'
 import { itemService } from '@/services/api/item.service'
 import { ItemType, ItemRarity, ItemStatus } from '@/enums/item.enum'
 import type { Item, ItemFilter } from '@/interfaces/item.interface'
 import { formatDate } from '@/utils/format'
-import { CheckIcon, MinusIcon } from '@lucide/vue'
+import { CheckIcon, MinusIcon, InfoIcon, SquarePenIcon } from '@lucide/vue'
 
 const { t } = useI18n()
 
 const items = ref<Item[]>([])
 const total = ref(0)
+const selectedEquipment = ref<Item | null>(null)
+const itemEquipmentModalRef = ref<InstanceType<typeof ItemEquipmentModal>>()
+const selectedItem = ref<Item | null>(null)
+const infoEditModalRef = ref<InstanceType<typeof ItemInfoEditModal>>()
+
+function openEquipmentModal(item: Item) {
+  selectedEquipment.value = item
+  itemEquipmentModalRef.value?.open()
+}
+
+function openInfoEditModal(item: Item) {
+  selectedItem.value = item
+  infoEditModalRef.value?.open()
+}
+
+async function onEquipmentUpdated() {
+  await fetchItems()
+  selectedEquipment.value =
+    items.value.find((i) => i._id === selectedEquipment.value?._id) ?? selectedEquipment.value
+}
 
 const filter = reactive({
   type: '' as ItemType | '',
@@ -71,11 +94,23 @@ const columns = computed<ColumnDef<Item>[]>(() => [
   {
     accessorKey: 'metadata',
     header: t('item.columns.metadata'),
-    cell: ({ row }) =>
-      h(VJsonView, {
+    cell: ({ row }) => {
+      const item = row.original
+      if (item.type === ItemType.EQUIPMENT) {
+        return h('div', { class: 'flex justify-center gap-1' }, [
+          h(VButton, {
+            icon: InfoIcon,
+            class: 'btn-ghost btn-sm text-info',
+            title: t('item.equipment.tabs.stats'),
+            onClick: () => openEquipmentModal(item),
+          }),
+        ])
+      }
+      return h(VJsonView, {
         value: row.getValue('metadata'),
         title: t('item.columns.metadata'),
-      }),
+      })
+    },
     meta: { align: 'center', minWidth: 'w-28' },
   },
   {
@@ -89,6 +124,19 @@ const columns = computed<ColumnDef<Item>[]>(() => [
     header: t('item.columns.updatedAt'),
     cell: ({ row }) => formatDate(row.getValue('updatedAt')),
     meta: { align: 'center', minWidth: 'w-40' },
+  },
+  {
+    id: 'actions',
+    header: '',
+    meta: { align: 'center', minWidth: 'w-16' },
+    cell: ({ row }) =>
+      h('div', { class: 'flex justify-center gap-1' }, [
+        h(VButton, {
+          icon: SquarePenIcon,
+          class: 'btn-ghost text-primary',
+          onClick: () => openInfoEditModal(row.original),
+        }),
+      ]),
   },
 ])
 
@@ -167,4 +215,11 @@ function resetFilters() {
       </div>
     </div>
   </div>
+
+  <ItemEquipmentModal
+    ref="itemEquipmentModalRef"
+    :item="selectedEquipment"
+    @updated="onEquipmentUpdated"
+  />
+  <ItemInfoEditModal ref="infoEditModalRef" :item="selectedItem" @saved="fetchItems" />
 </template>

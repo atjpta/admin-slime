@@ -458,6 +458,78 @@ Info card chứa tất cả: tên resource, ID mono, các field chính, và nút
 
 ---
 
+## Modal Pattern
+
+Mọi `<dialog>` modal phải dùng native dialog API. Tham khảo `src/pages/items/components/item-equipment-modal.vue`.
+
+### Script
+
+```ts
+const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
+defineExpose({ open })   // nếu parent gọi trực tiếp
+
+function open() {
+  dialogRef.value?.showModal()
+}
+
+function close() {
+  emit('close')
+  dialogRef.value?.close()
+}
+```
+
+**Modals controlled bởi data prop** (e.g. `gacha: Gacha | null`):
+
+```ts
+watch(() => props.gacha, (g) => {
+  if (g) dialogRef.value?.showModal()
+})
+```
+
+**Modals controlled bởi `open: boolean` prop**:
+
+```ts
+watch(() => props.open, (v) => {
+  if (v) dialogRef.value?.showModal()
+  else dialogRef.value?.close()
+})
+```
+
+### Template
+
+```vue
+<dialog ref="dialog" class="modal">
+  <div class="modal-box max-w-lg">
+    <!-- X button -->
+    <div class="absolute top-3 right-3">
+      <VButton class="btn-ghost btn-circle" @click="close"> ✕ </VButton>
+    </div>
+
+    <h3 class="mb-4 text-lg font-semibold">{{ title }}</h3>
+
+    <!-- Scrollable content -->
+    <div class="-mx-6 max-h-[50dvh] overflow-y-auto px-6">
+      <!-- body -->
+    </div>
+
+    <!-- Actions NGOÀI scroll container -->
+    <div class="modal-action">
+      <VButton class="btn-ghost" @click="close">{{ t('common.cancel') }}</VButton>
+      <VButton class="btn-primary" @click="submit">{{ t('common.save') }}</VButton>
+    </div>
+  </div>
+</dialog>
+```
+
+### Quy tắc
+
+- **Không** dùng `:class="{ 'modal-open': ... }"` — dùng `dialogRef.showModal()` / `dialogRef.close()`
+- **Không** có `<form method="dialog" class="modal-backdrop">` — không click-outside-to-close
+- `modal-action` luôn nằm **ngoài** scroll container
+- Scroll container dùng class `"-mx-6 max-h-[50dvh] overflow-y-auto px-6"` — margin âm để padding của modal-box không bị cộng thêm
+
+---
+
 ## Quy tắc chung
 
 **Event handler gọi nhiều hàm:** Nếu một event handler cần gọi ≥ 2 hàm, tạo wrapper function trong script thay vì viết inline arrow function trong template.

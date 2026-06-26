@@ -1,33 +1,36 @@
 import type { Pagination } from '@/interfaces/pagination.interface'
-import type { Mail, MailDetail, MailFilter, SendMailDto, UpdateMailDto } from '@/interfaces/mail.interface'
+import type {
+  Mail,
+  MailDetail,
+  MailFilter,
+  SendMailDto,
+  UpdateMailDto,
+} from '@/interfaces/mail.interface'
 import { BaseApi } from '@/services/api/base-api.service'
 
 class MailService extends BaseApi {
   private url = '/admin/mails'
 
   async index(filter: MailFilter) {
-    const res = await this.http.get(this.url, { query: filter })
-    return this.unwrap<Pagination<Mail[]>>(res)
+    return this.execute<Pagination<Mail[]>>(() =>
+      this.http.get<Pagination<Mail[]>>(this.url, { query: filter })
+    )
   }
 
   async getById(id: string) {
-    const res = await this.http.get(`${this.url}/${id}`)
-    return this.unwrap<MailDetail>(res)
+    return this.execute<MailDetail>(() => this.http.get<MailDetail>(`${this.url}/${id}`))
   }
 
   async update(id: string, dto: UpdateMailDto) {
-    const res = await this.http.put(`${this.url}/${id}`, { body: dto })
-    return this.unwrap<Mail>(res)
+    return this.execute<Mail>(() => this.http.put<Mail>(`${this.url}/${id}`, { body: dto }))
   }
 
   async send(dto: SendMailDto) {
-    const res = await this.http.post(this.url, { body: dto })
-    return this.unwrap<Mail>(res)
+    return this.execute<Mail>(() => this.http.post<Mail>(this.url, { body: dto }))
   }
 
   async delete(id: string) {
-    const res = await this.http.delete(`${this.url}/${id}`)
-    return this.unwrap<Mail>(res)
+    return this.execute<Mail>(() => this.http.delete<Mail>(`${this.url}/${id}`))
   }
 }
 

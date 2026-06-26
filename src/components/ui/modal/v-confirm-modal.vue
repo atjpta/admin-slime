@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch, useTemplateRef } from 'vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import { useI18n } from 'vue-i18n'
 
@@ -10,18 +11,31 @@ interface Props {
   loading?: boolean
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   confirmClass: 'btn-error',
   loading: false,
 })
 
-defineEmits<{ confirm: []; cancel: [] }>()
+defineEmits<{ confirm: []; cancel: []; close: [] }>()
 const { t } = useI18n()
+
+const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
+
+watch(
+  () => props.open,
+  (v) => {
+    if (v) dialogRef.value?.showModal()
+    else dialogRef.value?.close()
+  }
+)
 </script>
 
 <template>
-  <dialog class="modal" :class="{ 'modal-open': open }">
+  <dialog ref="dialog" class="modal">
     <div class="modal-box max-w-sm">
+      <div class="absolute top-3 right-3">
+        <VButton class="btn-ghost btn-circle" @click="$emit('close')"> ✕ </VButton>
+      </div>
       <h3 v-if="title" class="mb-2 text-lg font-bold">{{ title }}</h3>
       <p v-if="message" class="text-base-content/70 text-sm">{{ message }}</p>
       <div class="modal-action">
@@ -31,8 +45,5 @@ const { t } = useI18n()
         </VButton>
       </div>
     </div>
-    <form method="dialog" class="modal-backdrop" @submit.prevent="$emit('cancel')">
-      <button>close</button>
-    </form>
   </dialog>
 </template>

@@ -11,8 +11,9 @@ interface LoginResponse {
 
 class AuthService extends BaseApi {
   async login(payload: LoginPayload): Promise<LoginResponse> {
-    const res = await this.http.post<LoginPayload>('/admin/login', { body: payload })
-    return this.unwrap<LoginResponse>(res)
+    return this.execute<LoginResponse>(() =>
+      this.http.post<LoginResponse>('/admin/login', { body: payload })
+    )
   }
 }
 

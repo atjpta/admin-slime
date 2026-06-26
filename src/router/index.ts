@@ -7,22 +7,22 @@ declare module 'vue-router' {
   }
 }
 
-export const RouteName = {
-  Login: 'login',
-  Dashboard: 'dashboard',
-  Users: 'users',
-  Admins: 'admins',
-  Players: 'players',
-  PlayerDetail: 'player-detail',
-  Items: 'items',
-  BattleItems: 'battle-items',
-  Gachas: 'gachas',
-  GachaDetail: 'gacha-detail',
-  GachaHistories: 'gacha-histories',
-  Mails: 'mails',
-  MailDetail: 'mail-detail',
-  MailTemplates: 'mail-templates',
-} as const
+export enum RouteName {
+  Login = 'login',
+  Dashboard = 'dashboard',
+  Users = 'users',
+  Admins = 'admins',
+  Players = 'players',
+  PlayerDetail = 'player-detail',
+  Items = 'items',
+  BattleItems = 'battle-items',
+  Gachas = 'gachas',
+  GachaDetail = 'gacha-detail',
+  GachaHistories = 'gacha-histories',
+  Mails = 'mails',
+  MailDetail = 'mail-detail',
+  MailTemplates = 'mail-templates',
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

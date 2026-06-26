@@ -26,7 +26,8 @@
     "langVi": "Vietnamese",
     "langEn": "English",
     "noResults": "No results",
-    "translate": "Translate from {lang}"
+    "translate": "Translate from {lang}",
+    "add": "Add"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -245,6 +246,24 @@
       "shop": "Shop",
       "quest": "Quest",
       "craft": "Craft"
+    },
+    "equipment": {
+      "tabs": {
+        "detail": "Detail",
+        "stats": "Stats",
+        "rollConfig": "Roll Config"
+      },
+      "stats": {
+        "updateSuccess": "Stats updated successfully"
+      },
+      "rollConfig": {
+        "slots": "Slots",
+        "updateSuccess": "Roll config updated successfully"
+      },
+      "info": {
+        "editTitle": "Edit Info",
+        "updateSuccess": "Info updated successfully"
+      }
     }
   },
   "battleItem": {
@@ -429,6 +448,9 @@
       "title": "Delete Mail",
       "message": "Are you sure you want to delete this mail?",
       "success": "Mail deleted successfully"
+    },
+    "toggleSendToNewPlayers": {
+      "success": "Updated successfully"
     },
     "fields": {
       "useTemplate": "Use Template",

@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { toast } from 'vue-sonner'
+import { toast } from '@/utils/toast'
 import { PlusIcon, Trash2Icon } from '@lucide/vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import { mailService } from '@/services/api/mail.service'
 import { mailTemplateService } from '@/services/api/mail-template.service'
-import { parseApiError } from '@/utils/api-error'
 import { CurrencyCode } from '@/enums/gacha.enum'
 import MailReceiverPicker from './mail-receiver-picker.vue'
 import MailItemRewardEditor from './mail-item-reward-editor.vue'
@@ -14,9 +13,19 @@ import type { ItemRewardRow } from './mail-item-reward-editor.vue'
 import type { Player } from '@/interfaces/player.interface'
 import type { MailTemplate, CurrencyReward } from '@/interfaces/mail.interface'
 
-defineProps<{ open: boolean }>()
+const props = defineProps<{ open: boolean }>()
 const emit = defineEmits<{ close: []; sent: [] }>()
 const { t } = useI18n()
+
+const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
+
+watch(
+  () => props.open,
+  (v) => {
+    if (v) dialogRef.value?.showModal()
+    else dialogRef.value?.close()
+  }
+)
 
 const loading = ref(false)
 const templates = ref<MailTemplate[]>([])
@@ -87,61 +96,63 @@ function resetForm() {
 
 async function submit() {
   loading.value = true
-  try {
-    const receivers =
-      receiversMode.value === 'all' ? 'all' : selectedPlayers.value.map((p) => p._id)
-    const hasRewards = currencies.value.length > 0 || itemRows.value.length > 0
+  const receivers = receiversMode.value === 'all' ? 'all' : selectedPlayers.value.map((p) => p._id)
+  const hasRewards = currencies.value.length > 0 || itemRows.value.length > 0
 
-    const dto: Parameters<typeof mailService.send>[0] = {
-      receivers,
-      sendToNewPlayers: sendToNewPlayers.value,
-      rewards: hasRewards
-        ? {
-            currency: currencies.value,
-            items: itemRows.value.map((r) => ({
-              item: r.item._id,
-              quantity: r.quantity,
-              source: r.source,
-              metadata: r.metadata,
-            })),
-          }
-        : undefined,
-    }
-
-    if (useTemplate.value && templateId.value) {
-      dto.templateId = templateId.value
-    } else {
-      dto.title = { vi: title.value, en: title.value }
-      dto.content = { vi: content.value, en: content.value }
-      dto.expirationDuration = expirationDuration.value
-      if (saveAsTemplate.value && templateName.value)
-        dto.saveAsTemplate = { name: templateName.value }
-    }
-
-    await mailService.send(dto)
-    toast.success(t('mail.send.success'))
-    resetForm()
-    emit('sent')
-    emit('close')
-  } catch (err) {
-    toast.error(parseApiError(err))
-  } finally {
-    loading.value = false
+  const dto: Parameters<typeof mailService.send>[0] = {
+    receivers,
+    sendToNewPlayers: sendToNewPlayers.value,
+    rewards: hasRewards
+      ? {
+          currency: currencies.value,
+          items: itemRows.value.map((r) => ({
+            item: r.item._id,
+            quantity: r.quantity,
+            source: r.source,
+            metadata: r.metadata,
+          })),
+        }
+      : undefined,
   }
+
+  if (useTemplate.value && templateId.value) {
+    dto.templateId = templateId.value
+  } else {
+    dto.title = { vi: title.value, en: title.value }
+    dto.content = { vi: content.value, en: content.value }
+    dto.expirationDuration = expirationDuration.value
+    if (saveAsTemplate.value && templateName.value)
+      dto.saveAsTemplate = { name: templateName.value }
+  }
+
+  await mailService.send(dto)
+  toast.success(t('mail.send.success'))
+  resetForm()
+  emit('sent')
+  close()
+  loading.value = false
+}
+
+function close() {
+  emit('close')
+  dialogRef.value?.close()
 }
 
 function handleClose() {
   resetForm()
-  emit('close')
+  close()
 }
 </script>
 
 <template>
-  <dialog class="modal" :class="{ 'modal-open': open }">
+  <dialog ref="dialog" class="modal">
     <div class="modal-box m-4 max-w-2xl">
+      <div class="absolute top-3 right-3">
+        <VButton class="btn-ghost btn-circle" @click="handleClose"> ✕ </VButton>
+      </div>
       <h3 class="mb-4 text-lg font-semibold">{{ t('mail.send.title') }}</h3>
 
-      <div class="flex max-h-[65vh] flex-col gap-4 overflow-y-auto px-1">
+      <div class="-mx-6 max-h-[50dvh] overflow-y-auto px-6">
         <!-- Toggle template -->
         <label class="label cursor-pointer justify-start gap-3">
           <input v-model="useTemplate" type="checkbox" class="toggle toggle-sm toggle-primary" />
@@ -281,8 +292,5 @@ function handleClose() {
         }}</VButton>
       </div>
     </div>
-    <form method="dialog" class="modal-backdrop" @submit.prevent="handleClose">
-      <button>close</button>
-    </form>
   </dialog>
 </template>

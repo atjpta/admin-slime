@@ -23,7 +23,7 @@ const { t } = useI18n()
 
 const resolvedOptions = computed<SelectFilterOption[]>(() => {
   if (enumValues && i18nKey) {
-    return Object.values(enumValues).map(value => ({ value, label: t(`${i18nKey}.${value}`) }))
+    return Object.values(enumValues).map((value) => ({ value, label: t(`${i18nKey}.${value}`) }))
   }
   return options ?? []
 })

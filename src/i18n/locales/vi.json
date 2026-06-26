@@ -26,7 +26,8 @@
     "langVi": "Tiếng Việt",
     "langEn": "Tiếng Anh",
     "noResults": "Không có kết quả",
-    "translate": "Dịch từ {lang}"
+    "translate": "Dịch từ {lang}",
+    "add": "Thêm"
   },
   "nav": {
     "dashboard": "Tổng quan",
@@ -245,6 +246,24 @@
       "shop": "Cửa hàng",
       "quest": "Nhiệm vụ",
       "craft": "Chế tạo"
+    },
+    "equipment": {
+      "tabs": {
+        "detail": "Chi tiết",
+        "stats": "Chỉ số",
+        "rollConfig": "Roll Config"
+      },
+      "stats": {
+        "updateSuccess": "Cập nhật chỉ số thành công"
+      },
+      "rollConfig": {
+        "slots": "Số slot",
+        "updateSuccess": "Cập nhật roll config thành công"
+      },
+      "info": {
+        "editTitle": "Chỉnh sửa thông tin",
+        "updateSuccess": "Cập nhật thông tin thành công"
+      }
     }
   },
   "battleItem": {
@@ -429,6 +448,9 @@
       "title": "Xóa thư",
       "message": "Bạn có chắc muốn xóa thư này không?",
       "success": "Xóa thư thành công"
+    },
+    "toggleSendToNewPlayers": {
+      "success": "Cập nhật thành công"
     },
     "fields": {
       "useTemplate": "Dùng mẫu thư",

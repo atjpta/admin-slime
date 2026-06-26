@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { InfoIcon } from '@lucide/vue'
 import VButton from '@/components/ui/btn/v-button.vue'
@@ -8,7 +8,12 @@ import VItemDetailModal from '@/components/ui/modal/v-item-detail-modal.vue'
 import { playerService } from '@/services/api/player.service'
 import { ItemType } from '@/enums/item.enum'
 import type { EquipmentSlot } from '@/enums/item.enum'
-import type { PlayerInventory, InventoryItem, EquipmentItemMetadata, EquipmentInstanceMetadata } from '@/interfaces/player.interface'
+import type {
+  PlayerInventory,
+  InventoryItem,
+  EquipmentItemMetadata,
+  EquipmentInstanceMetadata,
+} from '@/interfaces/player.interface'
 
 const props = defineProps<{
   open: boolean
@@ -19,6 +24,16 @@ const props = defineProps<{
 
 const emit = defineEmits<{ close: []; equipped: [] }>()
 const { t } = useI18n()
+
+const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
+
+watch(
+  () => props.open,
+  (v) => {
+    if (v) dialogRef.value?.showModal()
+    else dialogRef.value?.close()
+  }
+)
 
 const search = ref('')
 const equippingId = ref<string | null>(null)
@@ -39,25 +54,25 @@ const matchingItems = computed<InventoryItem[]>(() => {
 async function equip(inv: InventoryItem) {
   if (!props.slot) return
   equippingId.value = inv._id
-  try {
-    await playerService.equipItem(props.playerId, { slot: props.slot, inventoryItemId: inv._id })
-    emit('equipped')
-    close()
-  } finally {
-    equippingId.value = null
-  }
+  await playerService.equipItem(props.playerId, { slot: props.slot, inventoryItemId: inv._id })
+  emit('equipped')
+  close()
+  equippingId.value = null
 }
 
 function close() {
   search.value = ''
   emit('close')
+  dialogRef.value?.close()
 }
 </script>
 
 <template>
-  <dialog class="modal" :class="{ 'modal-open': open }" @click.self="close">
+  <dialog ref="dialog" class="modal">
     <div class="modal-box max-w-lg">
-      <button class="btn btn-circle btn-ghost btn-sm absolute top-3 right-3" @click="close">✕</button>
+      <div class="absolute top-3 right-3">
+        <VButton class="btn-ghost btn-circle" @click="close"> ✕ </VButton>
+      </div>
       <h3 class="mb-1 text-lg font-bold">{{ t('player.detail.equipTitle') }}</h3>
       <p v-if="slot" class="text-base-content/50 mb-4 text-sm">
         {{ t(`item.slot.${slot}`) }}
@@ -71,7 +86,7 @@ function close() {
       />
 
       <div class="max-h-80 overflow-y-auto">
-        <table v-if="matchingItems.length" class="table table-sm">
+        <table v-if="matchingItems.length" class="table-sm table">
           <thead>
             <tr>
               <th>{{ t('item.columns.code') }}</th>
@@ -85,7 +100,11 @@ function close() {
               <td class="font-mono text-sm">{{ inv.item.code }}</td>
               <td><VItemRarityBadge :value="inv.item.rarity" /></td>
               <td>
-                <VButton :icon="InfoIcon" class="btn-ghost btn-xs text-info" @click="detailItem = inv" />
+                <VButton
+                  :icon="InfoIcon"
+                  class="btn-ghost btn-xs text-info"
+                  @click="detailItem = inv"
+                />
               </td>
               <td>
                 <VButton

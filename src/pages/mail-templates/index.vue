@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { h, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { toast } from 'vue-sonner'
+import { toast } from '@/utils/toast'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { useDataTable } from '@/composables/useDataTable'
 import VTable from '@/components/ui/table/v-table.vue'
@@ -10,7 +10,6 @@ import VPagination from '@/components/ui/pagination/v-pagination.vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import VConfirmModal from '@/components/ui/modal/v-confirm-modal.vue'
 import { mailTemplateService } from '@/services/api/mail-template.service'
-import { parseApiError } from '@/utils/api-error'
 import { formatDate } from '@/utils/format'
 import type { MailTemplate } from '@/interfaces/mail.interface'
 import { PlusIcon, SquarePenIcon, Trash2Icon } from '@lucide/vue'
@@ -89,16 +88,11 @@ const { table, page, pageSize, search, loading } = useDataTable({
 async function confirmDelete() {
   if (!deletingTemplate.value) return
   deleteLoading.value = true
-  try {
-    await mailTemplateService.delete(deletingTemplate.value._id)
-    toast.success(t('mailTemplate.delete.success'))
-    deletingTemplate.value = null
-    await fetchTemplates()
-  } catch (err) {
-    toast.error(parseApiError(err))
-  } finally {
-    deleteLoading.value = false
-  }
+  await mailTemplateService.delete(deletingTemplate.value._id)
+  toast.success(t('mailTemplate.delete.success'))
+  deletingTemplate.value = null
+  await fetchTemplates()
+  deleteLoading.value = false
 }
 </script>
 

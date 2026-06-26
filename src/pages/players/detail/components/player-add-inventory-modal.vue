@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { XIcon } from '@lucide/vue'
 import VButton from '@/components/ui/btn/v-button.vue'
@@ -19,6 +19,16 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits<{ close: []; added: [] }>()
 const { t } = useI18n()
+
+const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
+
+watch(
+  () => props.open,
+  (v) => {
+    if (v) dialogRef.value?.showModal()
+    else dialogRef.value?.close()
+  }
+)
 
 // --- Search ---
 const searchCode = ref('')
@@ -47,18 +57,15 @@ watch(searchCode, (val) => {
 async function doSearch() {
   searching.value = true
   searched.value = false
-  try {
-    const res = await itemService.index({
-      search: searchCode.value.trim(),
-      page: 1,
-      limit: 20,
-      status: ItemStatus.ACTIVE,
-    })
-    searchResults.value = res.items
-    searched.value = true
-  } finally {
-    searching.value = false
-  }
+  const res = await itemService.index({
+    search: searchCode.value.trim(),
+    page: 1,
+    limit: 20,
+    status: ItemStatus.ACTIVE,
+  })
+  searchResults.value = res.items
+  searched.value = true
+  searching.value = false
 }
 
 // --- Selected item ---
@@ -141,26 +148,21 @@ const submitLoading = ref(false)
 async function submit() {
   if (!fetchedItem.value) return
   submitLoading.value = true
-  try {
-    const rarityStats =
-      rarityStatsMode.value === 'custom' && rollConfig.value
-        ? selectedEntries.value.map((e) => ({
-            stat: e.stat,
-            type: e.type,
-            value: resolvedValue(e),
-          }))
-        : undefined
-    await playerService.addInventoryItem(props.playerId, {
-      itemCode: fetchedItem.value.code,
-      rarityStats,
-    })
-    emit('added')
-    close()
-  } catch {
-    // handled by interceptor
-  } finally {
-    submitLoading.value = false
-  }
+  const rarityStats =
+    rarityStatsMode.value === 'custom' && rollConfig.value
+      ? selectedEntries.value.map((e) => ({
+          stat: e.stat,
+          type: e.type,
+          value: resolvedValue(e),
+        }))
+      : undefined
+  await playerService.addInventoryItem(props.playerId, {
+    itemCode: fetchedItem.value.code,
+    rarityStats,
+  })
+  emit('added')
+  close()
+  submitLoading.value = false
 }
 
 function resetAll() {
@@ -174,16 +176,17 @@ function resetAll() {
 
 function close() {
   emit('close')
+  dialogRef.value?.close()
   resetAll()
 }
 </script>
 
 <template>
-  <dialog class="modal" :class="{ 'modal-open': open }" @click.self="close">
+  <dialog ref="dialog" class="modal">
     <div class="modal-box max-w-xl">
-      <button class="btn btn-circle btn-ghost btn-sm absolute top-3 right-3" @click="close">
-        ✕
-      </button>
+      <div class="absolute top-3 right-3">
+        <VButton class="btn-ghost btn-circle" @click="close"> ✕ </VButton>
+      </div>
       <h3 class="mb-4 text-lg font-bold">{{ t('player.addItem.title') }}</h3>
 
       <template v-if="!fetchedItem">
@@ -358,7 +361,7 @@ function close() {
         </template>
 
         <div class="modal-action mt-4">
-          <button class="btn btn-ghost" @click="close">{{ t('common.cancel') }}</button>
+          <VButton class="btn btn-ghost" @click="close">{{ t('common.cancel') }}</VButton>
           <VButton class="btn-primary" :loading="submitLoading" @click="submit">
             {{ t('common.save') }}
           </VButton>

@@ -6,8 +6,9 @@ class AdminService extends BaseApi {
   private url = '/admin'
 
   async index(filter: AdminFilter) {
-    const res = await this.http.get(`${this.url}`, { query: filter })
-    return this.unwrap<Pagination<Admin[]>>(res)
+    return this.execute<Pagination<Admin[]>>(() =>
+      this.http.get<Pagination<Admin[]>>(this.url, { query: filter })
+    )
   }
 }
 

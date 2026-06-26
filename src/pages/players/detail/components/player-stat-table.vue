@@ -15,7 +15,11 @@ const columns = computed<ColumnDef<PlayerStat>[]>(() => [
     accessorKey: 'stat',
     header: t('player.detail.stat'),
     cell: ({ getValue }) =>
-      h('span', { class: 'badge badge-outline font-mono text-xs' }, t(`stat.key.${getValue<string>()}`)),
+      h(
+        'span',
+        { class: 'badge badge-outline font-mono text-xs' },
+        t(`stat.key.${getValue<string>()}`)
+      ),
   },
   {
     accessorKey: 'type',
@@ -26,8 +30,7 @@ const columns = computed<ColumnDef<PlayerStat>[]>(() => [
   {
     id: 'value',
     header: t('player.detail.statValue'),
-    cell: ({ row }) =>
-      `${row.original.value}${row.original.type === StatType.PERCENT ? '%' : ''}`,
+    cell: ({ row }) => `${row.original.value}${row.original.type === StatType.PERCENT ? '%' : ''}`,
     meta: { align: 'center' },
   },
   {
@@ -38,15 +41,19 @@ const columns = computed<ColumnDef<PlayerStat>[]>(() => [
       return h(
         'span',
         { class: ['badge badge-sm', v === StatSource.EQUIPMENT ? 'badge-info' : 'badge-ghost'] },
-        t(`stat.source.${v}`),
+        t(`stat.source.${v}`)
       )
     },
   },
 ])
 
 const table = useVueTable({
-  get data() { return props.stats },
-  get columns() { return columns.value },
+  get data() {
+    return props.stats
+  },
+  get columns() {
+    return columns.value
+  },
   getCoreRowModel: getCoreRowModel(),
 })
 </script>

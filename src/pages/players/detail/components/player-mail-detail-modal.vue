@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { CoinsIcon, PackageIcon } from '@lucide/vue'
 import VButton from '@/components/ui/btn/v-button.vue'
@@ -17,6 +17,7 @@ const emit = defineEmits<{ close: [] }>()
 
 const { t, locale } = useI18n()
 
+const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
 const mailDetail = ref<MailDetail | null>(null)
 const loadingDetail = ref(false)
 const selectedReward = ref<PopulatedItemReward | null>(null)
@@ -28,14 +29,17 @@ watch(
       mailDetail.value = null
       return
     }
+    dialogRef.value?.showModal()
     loadingDetail.value = true
-    try {
-      mailDetail.value = await mailService.getById(val.mail._id)
-    } finally {
-      loadingDetail.value = false
-    }
+    mailDetail.value = await mailService.getById(val.mail._id)
+    loadingDetail.value = false
   }
 )
+
+function close() {
+  emit('close')
+  dialogRef.value?.close()
+}
 
 const rarityClass: Record<string, string> = {
   [ItemRarity.COMMON]: 'badge-ghost',
@@ -51,8 +55,11 @@ function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
 </script>
 
 <template>
-  <dialog class="modal" :class="{ 'modal-open': !!item }">
+  <dialog ref="dialog" class="modal">
     <div v-if="item" class="modal-box max-w-lg">
+      <div class="absolute top-3 right-3">
+        <VButton class="btn-ghost btn-circle" @click="close"> ✕ </VButton>
+      </div>
       <!-- Header -->
       <div class="mb-4 flex items-start justify-between gap-3">
         <div class="min-w-0">
@@ -64,7 +71,7 @@ function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
         <VMailStatusBadge :value="item.status" class="shrink-0" />
       </div>
 
-      <div class="flex max-h-[65vh] flex-col gap-4 overflow-y-auto pr-1">
+      <div class="-mx-6 max-h-[50dvh] overflow-y-auto px-6">
         <!-- Meta -->
         <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
           <div class="flex flex-col gap-0.5">
@@ -200,12 +207,9 @@ function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
       </div>
 
       <div class="modal-action">
-        <VButton class="btn-ghost" @click="emit('close')">{{ t('common.close') }}</VButton>
+        <VButton class="btn-ghost" @click="close">{{ t('common.close') }}</VButton>
       </div>
     </div>
-    <form method="dialog" class="modal-backdrop" @submit.prevent="emit('close')">
-      <button>close</button>
-    </form>
   </dialog>
 
   <VItemDetailModal

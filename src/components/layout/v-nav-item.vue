@@ -44,11 +44,15 @@ function isActive(node: NavItem): boolean {
         isExactActive(item)
           ? 'border-primary bg-primary/10 text-primary hover:bg-primary/10 focus:bg-primary/10 font-medium'
           : isActive(item)
-            ? 'border-transparent text-primary font-medium'
+            ? 'text-primary border-transparent font-medium'
             : 'border-transparent'
       "
     >
-      <component :is="item.icon" class="size-4 shrink-0" :class="isActive(item) ? '' : item.iconClass" />
+      <component
+        :is="item.icon"
+        class="size-4 shrink-0"
+        :class="isActive(item) ? '' : item.iconClass"
+      />
       {{ t(item.labelKey) }}
     </RouterLink>
   </li>

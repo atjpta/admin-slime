@@ -11,28 +11,27 @@ class MailTemplateService extends BaseApi {
   private url = '/admin/mail-templates'
 
   async index(filter: MailTemplateFilter) {
-    const res = await this.http.get(this.url, { query: filter })
-    return this.unwrap<Pagination<MailTemplate[]>>(res)
+    return this.execute<Pagination<MailTemplate[]>>(() =>
+      this.http.get<Pagination<MailTemplate[]>>(this.url, { query: filter })
+    )
   }
 
   async getById(id: string) {
-    const res = await this.http.get(`${this.url}/${id}`)
-    return this.unwrap<MailTemplate>(res)
+    return this.execute<MailTemplate>(() => this.http.get<MailTemplate>(`${this.url}/${id}`))
   }
 
   async create(dto: CreateMailTemplateDto) {
-    const res = await this.http.post(this.url, { body: dto })
-    return this.unwrap<MailTemplate>(res)
+    return this.execute<MailTemplate>(() => this.http.post<MailTemplate>(this.url, { body: dto }))
   }
 
   async update(id: string, dto: UpdateMailTemplateDto) {
-    const res = await this.http.put(`${this.url}/${id}`, { body: dto })
-    return this.unwrap<MailTemplate>(res)
+    return this.execute<MailTemplate>(() =>
+      this.http.put<MailTemplate>(`${this.url}/${id}`, { body: dto })
+    )
   }
 
   async delete(id: string) {
-    const res = await this.http.delete(`${this.url}/${id}`)
-    return this.unwrap<MailTemplate>(res)
+    return this.execute<MailTemplate>(() => this.http.delete<MailTemplate>(`${this.url}/${id}`))
   }
 }
 

@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { toast } from 'vue-sonner'
+import { toast } from '@/utils/toast'
 import VButton from '@/components/ui/btn/v-button.vue'
 import VItemRarityBadge from '@/components/ui/badge/v-item-rarity-badge.vue'
 import { gachaService } from '@/services/api/gacha.service'
 import { ItemRarity } from '@/enums/item.enum'
-import { parseApiError } from '@/utils/api-error'
 import type { Gacha, GachaRarity } from '@/interfaces/gacha.interface'
 
 const props = defineProps<{ gacha: Gacha }>()
 const emit = defineEmits<{ saved: [] }>()
 const { t } = useI18n()
 
-const ALL_RARITIES = [ItemRarity.COMMON, ItemRarity.RARE, ItemRarity.EPIC, ItemRarity.LEGENDARY] as const
+const ALL_RARITIES = [
+  ItemRarity.COMMON,
+  ItemRarity.RARE,
+  ItemRarity.EPIC,
+  ItemRarity.LEGENDARY,
+] as const
 const rarities = ref<GachaRarity[]>([])
 const saving = ref(false)
 
@@ -25,20 +29,15 @@ watch(
       return { rarity: r, rate: found?.rate ?? 0 }
     })
   },
-  { immediate: true },
+  { immediate: true }
 )
 
 async function save() {
   saving.value = true
-  try {
-    await gachaService.updateRarities(props.gacha._id, rarities.value)
-    toast.success(t('gacha.rarities.updateSuccess'))
-    emit('saved')
-  } catch (err) {
-    toast.error(parseApiError(err))
-  } finally {
-    saving.value = false
-  }
+  await gachaService.updateRarities(props.gacha._id, rarities.value)
+  toast.success(t('gacha.rarities.updateSuccess'))
+  emit('saved')
+  saving.value = false
 }
 </script>
 

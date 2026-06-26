@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { toast } from 'vue-sonner'
+import { toast } from '@/utils/toast'
 import { PlusIcon, TrashIcon, ZapIcon, CheckIcon, MinusIcon } from '@lucide/vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import VTableToolbar from '@/components/ui/table/v-table-toolbar.vue'
@@ -14,7 +14,6 @@ import GachaRewardAddModal from '../../components/gacha-reward-add-modal.vue'
 import GachaRewardQuickAddModal from '../../components/gacha-reward-quick-add-modal.vue'
 import { gachaService } from '@/services/api/gacha.service'
 import { ItemRarity, ItemType } from '@/enums/item.enum'
-import { parseApiError } from '@/utils/api-error'
 import type { Gacha, GachaRewardItem } from '@/interfaces/gacha.interface'
 
 const props = defineProps<{ gacha: Gacha }>()
@@ -29,50 +28,51 @@ const filterSearch = ref('')
 const filterType = ref('' as ItemType | '')
 const filterRarity = ref('' as ItemRarity | '')
 
-watch(() => props.gacha, (g) => { pendingRewards.value = g.listReward.map((r) => ({ ...r })) }, { immediate: true })
+watch(
+  () => props.gacha,
+  (g) => {
+    pendingRewards.value = g.listReward.map((r) => ({ ...r }))
+  },
+  { immediate: true }
+)
 
 const pendingCodes = computed(() => pendingRewards.value.map((r) => r.code))
 
 const filtered = computed(() => {
   let list = pendingRewards.value
-  if (filterSearch.value) list = list.filter((r) => r.code.toLowerCase().includes(filterSearch.value.toLowerCase()))
+  if (filterSearch.value)
+    list = list.filter((r) => r.code.toLowerCase().includes(filterSearch.value.toLowerCase()))
   if (filterType.value) list = list.filter((r) => r.type === filterType.value)
   if (filterRarity.value) list = list.filter((r) => r.rarity === filterRarity.value)
   return list
 })
 
-function addReward(item: GachaRewardItem) { pendingRewards.value.push(item) }
-function removeReward(index: number) { pendingRewards.value.splice(index, 1) }
+function addReward(item: GachaRewardItem) {
+  pendingRewards.value.push(item)
+}
+function removeReward(index: number) {
+  pendingRewards.value.splice(index, 1)
+}
 
 async function save() {
   saving.value = true
-  try {
-    await gachaService.updateRewards(props.gacha._id, { itemCodes: pendingCodes.value })
-    toast.success(t('gacha.rewards.updateSuccess'))
-    emit('saved')
-  } catch (err) {
-    toast.error(parseApiError(err))
-  } finally {
-    saving.value = false
-  }
+  await gachaService.updateRewards(props.gacha._id, { itemCodes: pendingCodes.value })
+  toast.success(t('gacha.rewards.updateSuccess'))
+  emit('saved')
+  saving.value = false
 }
 
 async function quickAdd(types: ItemType[], rarityList: ItemRarity[]) {
   showQuickAddModal.value = false
   saving.value = true
-  try {
-    await gachaService.updateRewards(props.gacha._id, {
-      itemCodes: pendingCodes.value,
-      types: types.length ? types : undefined,
-      rarities: rarityList.length ? rarityList : undefined,
-    })
-    toast.success(t('gacha.rewards.updateSuccess'))
-    emit('saved')
-  } catch (err) {
-    toast.error(parseApiError(err))
-  } finally {
-    saving.value = false
-  }
+  await gachaService.updateRewards(props.gacha._id, {
+    itemCodes: pendingCodes.value,
+    types: types.length ? types : undefined,
+    rarities: rarityList.length ? rarityList : undefined,
+  })
+  toast.success(t('gacha.rewards.updateSuccess'))
+  emit('saved')
+  saving.value = false
 }
 
 function resetFilter() {
@@ -101,8 +101,18 @@ function resetFilter() {
       @reset="resetFilter"
     >
       <template #filters>
-        <VSelectFilter v-model="filterType" :label="t('item.columns.type')" :enum-values="ItemType" i18n-key="item.type" />
-        <VSelectFilter v-model="filterRarity" :label="t('item.columns.rarity')" :enum-values="ItemRarity" i18n-key="item.rarity" />
+        <VSelectFilter
+          v-model="filterType"
+          :label="t('item.columns.type')"
+          :enum-values="ItemType"
+          i18n-key="item.type"
+        />
+        <VSelectFilter
+          v-model="filterRarity"
+          :label="t('item.columns.rarity')"
+          :enum-values="ItemRarity"
+          i18n-key="item.rarity"
+        />
       </template>
     </VTableToolbar>
 
@@ -137,17 +147,32 @@ function resetFilter() {
               <VJsonView :value="item.metadata" :title="t('item.columns.metadata')" />
             </td>
             <td>
-              <VButton :icon="TrashIcon" class="btn-ghost btn-sm text-error" @click="removeReward(pendingRewards.indexOf(item))" />
+              <VButton
+                :icon="TrashIcon"
+                class="btn-ghost btn-sm text-error"
+                @click="removeReward(pendingRewards.indexOf(item))"
+              />
             </td>
           </tr>
           <tr v-if="!filtered.length">
-            <td colspan="9" class="text-base-content/40 py-4 text-center text-sm">{{ t('table.empty') }}</td>
+            <td colspan="9" class="text-base-content/40 py-4 text-center text-sm">
+              {{ t('table.empty') }}
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <GachaRewardAddModal :open="showAddModal" :existing-ids="pendingCodes" @close="showAddModal = false" @add="addReward" />
-  <GachaRewardQuickAddModal :open="showQuickAddModal" @close="showQuickAddModal = false" @add="quickAdd" />
+  <GachaRewardAddModal
+    :open="showAddModal"
+    :existing-ids="pendingCodes"
+    @close="showAddModal = false"
+    @add="addReward"
+  />
+  <GachaRewardQuickAddModal
+    :open="showQuickAddModal"
+    @close="showQuickAddModal = false"
+    @add="quickAdd"
+  />
 </template>

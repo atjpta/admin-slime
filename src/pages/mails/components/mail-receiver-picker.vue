@@ -36,13 +36,10 @@ watch(searchText, (val) => {
 async function doSearch() {
   searching.value = true
   searched.value = false
-  try {
-    const res = await playerService.index({ search: searchText.value.trim(), page: 1, limit: 20 })
-    searchResults.value = res.items
-    searched.value = true
-  } finally {
-    searching.value = false
-  }
+  const res = await playerService.index({ search: searchText.value.trim(), page: 1, limit: 20 })
+  searchResults.value = res.items
+  searched.value = true
+  searching.value = false
 }
 
 function selectPlayer(p: Player) {
@@ -51,7 +48,10 @@ function selectPlayer(p: Player) {
 }
 
 function removePlayer(id: string) {
-  emit('update:modelValue', props.modelValue.filter((p) => p._id !== id))
+  emit(
+    'update:modelValue',
+    props.modelValue.filter((p) => p._id !== id)
+  )
 }
 </script>
 
@@ -109,7 +109,9 @@ function removePlayer(id: string) {
                   v-for="p in searchResults"
                   :key="p._id"
                   class="hover cursor-pointer"
-                  :class="{ 'pointer-events-none opacity-40': modelValue.some((s) => s._id === p._id) }"
+                  :class="{
+                    'pointer-events-none opacity-40': modelValue.some((s) => s._id === p._id),
+                  }"
                   @click="selectPlayer(p)"
                 >
                   <td class="font-medium">{{ p.name }}</td>

@@ -4,10 +4,8 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { authService } from '@/services/api/auth.service'
 import { setAuthToken } from '@/services/api/base-api.service'
-import { parseApiError } from '@/utils/api-error'
 import { useRouter } from 'vue-router'
 import { RouteName } from '@/router'
-import { toast } from 'vue-sonner'
 
 const { t } = useI18n({ useScope: 'global' })
 
@@ -16,15 +14,11 @@ const router = useRouter()
 
 async function handleLogin(payload: { email: string; password: string }) {
   loading.value = true
-  try {
-    const { token } = await authService.login(payload)
+  await authService.login(payload).then(({ token }) => {
     setAuthToken(token)
     router.push({ name: RouteName.Dashboard })
-  } catch (err) {
-    toast.error(parseApiError(err))
-  } finally {
-    loading.value = false
-  }
+  })
+  loading.value = false
 }
 </script>
 

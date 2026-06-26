@@ -40,12 +40,9 @@ async function confirmRemove() {
   if (!inv) return
   confirmTarget.value = null
   removingId.value = inv._id
-  try {
-    await playerService.removeInventoryItem(props.playerId, inv._id)
-    emit('removed')
-  } finally {
-    removingId.value = null
-  }
+  await playerService.removeInventoryItem(props.playerId, inv._id)
+  emit('removed')
+  removingId.value = null
 }
 
 // --- Filters ---

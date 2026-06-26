@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { h, ref, computed, reactive, toRef } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { toast } from 'vue-sonner'
+import { toast } from '@/utils/toast'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { useDataTable } from '@/composables/useDataTable'
 import VTable from '@/components/ui/table/v-table.vue'
@@ -11,7 +11,6 @@ import VButton from '@/components/ui/btn/v-button.vue'
 import VBadge from '@/components/ui/badge/v-badge.vue'
 import VConfirmModal from '@/components/ui/modal/v-confirm-modal.vue'
 import { mailService } from '@/services/api/mail.service'
-import { parseApiError } from '@/utils/api-error'
 import { formatDate } from '@/utils/format'
 import type { Mail } from '@/interfaces/mail.interface'
 import { MailSource } from '@/enums/mail.enum'
@@ -128,29 +127,20 @@ const { table, page, pageSize, search, loading } = useDataTable({
 
 async function toggleSendToNewPlayers(mail: Mail) {
   togglingIds.value.add(mail._id)
-  try {
-    await mailService.update(mail._id, { sendToNewPlayers: !mail.sendToNewPlayers })
-    mail.sendToNewPlayers = !mail.sendToNewPlayers
-  } catch (err) {
-    toast.error(parseApiError(err))
-  } finally {
-    togglingIds.value.delete(mail._id)
-  }
+  await mailService.update(mail._id, { sendToNewPlayers: !mail.sendToNewPlayers })
+  mail.sendToNewPlayers = !mail.sendToNewPlayers
+  toast.success(t('mail.toggleSendToNewPlayers.success'))
+  togglingIds.value.delete(mail._id)
 }
 
 async function confirmDelete() {
   if (!deletingMail.value) return
   deleteLoading.value = true
-  try {
-    await mailService.delete(deletingMail.value._id)
-    toast.success(t('mail.delete.success'))
-    deletingMail.value = null
-    await fetchMails()
-  } catch (err) {
-    toast.error(parseApiError(err))
-  } finally {
-    deleteLoading.value = false
-  }
+  await mailService.delete(deletingMail.value._id)
+  toast.success(t('mail.delete.success'))
+  deletingMail.value = null
+  await fetchMails()
+  deleteLoading.value = false
 }
 </script>
 

@@ -4,5 +4,7 @@ import { Toaster } from 'vue-sonner'
 
 <template>
   <RouterView />
-  <Toaster rich-colors position="top-right" />
+  <div id="toast-portal" popover="manual" class="toast-portal">
+    <Toaster rich-colors position="top-right" />
+  </div>
 </template>

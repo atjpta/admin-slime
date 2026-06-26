@@ -30,20 +30,26 @@ let debounce: ReturnType<typeof setTimeout> | null = null
 
 watch(searchCode, (val) => {
   if (debounce) clearTimeout(debounce)
-  if (!val.trim()) { searchResults.value = []; searched.value = false; return }
+  if (!val.trim()) {
+    searchResults.value = []
+    searched.value = false
+    return
+  }
   debounce = setTimeout(doSearch, 400)
 })
 
 async function doSearch() {
   searching.value = true
   searched.value = false
-  try {
-    const res = await itemService.index({ search: searchCode.value.trim(), page: 1, limit: 20, status: ItemStatus.ACTIVE })
-    searchResults.value = res.items
-    searched.value = true
-  } finally {
-    searching.value = false
-  }
+  const res = await itemService.index({
+    search: searchCode.value.trim(),
+    page: 1,
+    limit: 20,
+    status: ItemStatus.ACTIVE,
+  })
+  searchResults.value = res.items
+  searched.value = true
+  searching.value = false
 }
 
 // Pending config
@@ -64,15 +70,23 @@ const pendingSource = ref<ItemSource>(ItemSource.SYSTEM)
 const pendingRarityMode = ref<'random' | 'custom'>('random')
 const pendingEntries = ref<SelectedEntry[]>([])
 
-const rollConfig = computed<RollConfig | null>(() => (pendingItem.value?.metadata as any)?.rollConfig ?? null)
+const rollConfig = computed<RollConfig | null>(
+  () => (pendingItem.value?.metadata as any)?.rollConfig ?? null
+)
 const statOptions = computed(() => {
   if (!rollConfig.value) return []
   const seen = new Set<string>()
-  return rollConfig.value.stats.reduce<{ stat: string; type: string; min: number; max: number }[]>((acc, s) => {
-    const key = `${s.stat}__${s.type}`
-    if (!seen.has(key)) { seen.add(key); acc.push(s) }
-    return acc
-  }, [])
+  return rollConfig.value.stats.reduce<{ stat: string; type: string; min: number; max: number }[]>(
+    (acc, s) => {
+      const key = `${s.stat}__${s.type}`
+      if (!seen.has(key)) {
+        seen.add(key)
+        acc.push(s)
+      }
+      return acc
+    },
+    []
+  )
 })
 const slotsMax = computed(() => rollConfig.value?.slots ?? 0)
 const atLimit = computed(() => pendingEntries.value.length >= slotsMax.value)
@@ -111,7 +125,13 @@ function confirmAdd() {
   }
   const metadata: Record<string, unknown> =
     pendingRarityMode.value === 'custom' && pendingEntries.value.length
-      ? { rarityStats: pendingEntries.value.map((e) => ({ stat: e.stat, type: e.type, value: resolveValue(e) })) }
+      ? {
+          rarityStats: pendingEntries.value.map((e) => ({
+            stat: e.stat,
+            type: e.type,
+            value: resolveValue(e),
+          })),
+        }
       : {}
   emit('update:modelValue', [
     ...props.modelValue,
@@ -129,7 +149,10 @@ function removeRow(index: number) {
   emit('update:modelValue', rows)
 }
 
-const sourceOptions = Object.values(ItemSource).map((v) => ({ value: v, label: t(`item.source.${v}`) }))
+const sourceOptions = Object.values(ItemSource).map((v) => ({
+  value: v,
+  label: t(`item.source.${v}`),
+}))
 </script>
 
 <template>
@@ -150,7 +173,12 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({ value: v, label: t
           {{ t(`item.rarity.${row.item.rarity}`) }} · {{ t(`item.type.${row.item.type}`) }}
         </span>
       </div>
-      <input v-model.number="row.quantity" type="number" min="1" class="input input-bordered input-xs w-16 text-center" />
+      <input
+        v-model.number="row.quantity"
+        type="number"
+        min="1"
+        class="input input-bordered input-xs w-16 text-center"
+      />
       <VButton :icon="Trash2Icon" class="btn-ghost btn-xs text-error" @click="removeRow(idx)" />
     </div>
 
@@ -161,18 +189,27 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({ value: v, label: t
           <span class="font-mono font-bold">{{ pendingItem.code }}</span>
           <VItemTypeBadge :value="pendingItem.type" />
           <VItemRarityBadge :value="pendingItem.rarity" />
-          <VButton class="btn-ghost btn-xs ml-auto" @click="pendingItem = null">{{ t('common.edit') }}</VButton>
+          <VButton class="btn-ghost btn-xs ml-auto" @click="pendingItem = null">{{
+            t('common.edit')
+          }}</VButton>
         </div>
 
         <div class="mb-3 flex gap-3">
           <fieldset class="fieldset flex-1">
             <legend class="fieldset-legend">{{ t('mail.fields.itemQuantity') }}</legend>
-            <input v-model.number="pendingQty" type="number" min="1" class="input input-bordered input-sm w-full" />
+            <input
+              v-model.number="pendingQty"
+              type="number"
+              min="1"
+              class="input input-bordered input-sm w-full"
+            />
           </fieldset>
           <fieldset class="fieldset flex-1">
             <legend class="fieldset-legend">{{ t('mail.fields.itemSource') }}</legend>
             <select v-model="pendingSource" class="select select-bordered select-sm w-full">
-              <option v-for="opt in sourceOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+              <option v-for="opt in sourceOptions" :key="opt.value" :value="opt.value">
+                {{ opt.label }}
+              </option>
             </select>
           </fieldset>
         </div>
@@ -181,7 +218,9 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({ value: v, label: t
         <template v-if="rollConfig">
           <div class="mb-2 flex items-center justify-between">
             <p class="text-sm font-semibold">{{ t('player.addItem.rarityStats') }}</p>
-            <span class="text-base-content/50 text-xs">{{ pendingEntries.length }} / {{ slotsMax }}</span>
+            <span class="text-base-content/50 text-xs"
+              >{{ pendingEntries.length }} / {{ slotsMax }}</span
+            >
           </div>
           <div class="mb-3 flex gap-2">
             <button
@@ -196,7 +235,9 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({ value: v, label: t
           </div>
 
           <template v-if="pendingRarityMode === 'custom'">
-            <p class="text-base-content/50 mb-2 text-xs">{{ t('player.addItem.availableStats') }}</p>
+            <p class="text-base-content/50 mb-2 text-xs">
+              {{ t('player.addItem.availableStats') }}
+            </p>
             <div class="mb-3 flex flex-wrap gap-2">
               <button
                 v-for="opt in statOptions"
@@ -218,8 +259,12 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({ value: v, label: t
                 <div class="text-base-content/30 w-5 pt-0.5 text-xs">{{ i + 1 }}</div>
                 <div class="flex flex-1 flex-col gap-2">
                   <div class="flex items-center gap-2">
-                    <span class="badge badge-outline font-mono text-xs">{{ t(`stat.key.${entry.stat}`) }}</span>
-                    <span class="badge badge-ghost badge-xs">{{ t(`stat.type.${entry.type}`) }}</span>
+                    <span class="badge badge-outline font-mono text-xs">{{
+                      t(`stat.key.${entry.stat}`)
+                    }}</span>
+                    <span class="badge badge-ghost badge-xs">{{
+                      t(`stat.type.${entry.type}`)
+                    }}</span>
                   </div>
                   <div class="flex gap-1">
                     <button
@@ -239,12 +284,17 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({ value: v, label: t
                     class="input input-bordered input-xs w-full"
                     :placeholder="`${t('player.addItem.range')}: ${entry.min} – ${entry.max}`"
                   />
-                  <p v-else-if="entry.valueMode === 'max'" class="text-base-content/50 text-xs">max = {{ entry.max }}</p>
+                  <p v-else-if="entry.valueMode === 'max'" class="text-base-content/50 text-xs">
+                    max = {{ entry.max }}
+                  </p>
                   <p v-else class="text-base-content/50 text-xs">
                     {{ t('player.addItem.randomRange', { min: entry.min, max: entry.max }) }}
                   </p>
                 </div>
-                <button class="btn btn-ghost btn-xs btn-square self-start" @click="removeEntry(entry.id)">
+                <button
+                  class="btn btn-ghost btn-xs btn-square self-start"
+                  @click="removeEntry(entry.id)"
+                >
                   <XIcon class="size-3.5" />
                 </button>
               </div>
@@ -256,7 +306,9 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({ value: v, label: t
         </template>
 
         <div class="mt-3 flex justify-end">
-          <VButton class="btn-primary btn-sm" @click="confirmAdd">{{ t('common.confirm') }}</VButton>
+          <VButton class="btn-primary btn-sm" @click="confirmAdd">{{
+            t('common.confirm')
+          }}</VButton>
         </div>
       </div>
     </template>
@@ -289,7 +341,11 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({ value: v, label: t
                   v-for="item in searchResults"
                   :key="item._id"
                   class="hover cursor-pointer"
-                  :class="{ 'pointer-events-none opacity-40': modelValue.some((r) => r.item._id === item._id) }"
+                  :class="{
+                    'pointer-events-none opacity-40': modelValue.some(
+                      (r) => r.item._id === item._id
+                    ),
+                  }"
                   @click="selectItem(item)"
                 >
                   <td class="font-mono text-sm">{{ item.code }}</td>

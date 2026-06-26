@@ -1,22 +1,16 @@
-export const StatKey = {
-  ATTACK: 'attack',
-  MAGIC: 'magic',
-  DEFENSE: 'defense',
-  HP: 'hp',
-} as const
+export enum StatKey {
+  ATTACK = 'attack',
+  MAGIC = 'magic',
+  DEFENSE = 'defense',
+  HP = 'hp',
+}
 
-export type StatKey = (typeof StatKey)[keyof typeof StatKey]
+export enum StatType {
+  FLAT = 'flat',
+  PERCENT = 'percent',
+}
 
-export const StatType = {
-  FLAT: 'flat',
-  PERCENT: 'percent',
-} as const
-
-export type StatType = (typeof StatType)[keyof typeof StatType]
-
-export const StatSource = {
-  BASE: 'base',
-  EQUIPMENT: 'equipment',
-} as const
-
-export type StatSource = (typeof StatSource)[keyof typeof StatSource]
+export enum StatSource {
+  BASE = 'base',
+  EQUIPMENT = 'equipment',
+}

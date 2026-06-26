@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import VButton from '@/components/ui/btn/v-button.vue'
 import VItemTypeBadge from '@/components/ui/badge/v-item-type-badge.vue'
@@ -21,6 +21,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
 
 const searchCode = ref('')
 const results = ref<Item[]>([])
@@ -31,7 +32,10 @@ let debounceTimer: ReturnType<typeof setTimeout> | null = null
 watch(
   () => open,
   (v) => {
-    if (!v) {
+    if (v) {
+      dialogRef.value?.showModal()
+    } else {
+      dialogRef.value?.close()
       searchCode.value = ''
       results.value = []
       searched.value = false
@@ -53,23 +57,25 @@ watch(searchCode, (val) => {
 async function search() {
   searching.value = true
   searched.value = false
-  try {
-    const res = await itemService.index({
-      search: searchCode.value.trim(),
-      page: 1,
-      limit: 20,
-      status: ItemStatus.ACTIVE,
-    })
-    results.value = res.items
-    searched.value = true
-  } finally {
-    searching.value = false
-  }
+  const res = await itemService.index({
+    search: searchCode.value.trim(),
+    page: 1,
+    limit: 20,
+    status: ItemStatus.ACTIVE,
+  })
+  results.value = res.items
+  searched.value = true
+  searching.value = false
+}
+
+function close() {
+  emit('close')
+  dialogRef.value?.close()
 }
 
 function select(item: Item) {
   emit('add', item)
-  emit('close')
+  close()
 }
 
 function isAdded(code: string) {
@@ -78,68 +84,72 @@ function isAdded(code: string) {
 </script>
 
 <template>
-  <dialog class="modal" :class="{ 'modal-open': open }">
+  <dialog ref="dialog" class="modal">
     <div class="modal-box max-w-2xl">
+      <div class="absolute top-3 right-3">
+        <VButton class="btn-ghost btn-circle" @click="close"> ✕ </VButton>
+      </div>
       <h3 class="mb-4 text-lg font-semibold">{{ t('gacha.rewards.addTitle') }}</h3>
 
-      <input
-        v-model="searchCode"
-        type="text"
-        :placeholder="t('gacha.rewards.searchPlaceholder')"
-        class="input input-bordered mb-4 w-full"
-      />
+      <div class="-mx-6 max-h-[50dvh] overflow-y-auto px-6">
+        <input
+          v-model="searchCode"
+          type="text"
+          :placeholder="t('gacha.rewards.searchPlaceholder')"
+          class="input input-bordered mb-4 w-full"
+        />
 
-      <div class="min-h-32">
-        <div v-if="searching" class="flex justify-center py-8">
-          <span class="loading loading-spinner loading-md"></span>
-        </div>
-
-        <template v-else-if="searched">
-          <div v-if="results.length" class="max-h-72 overflow-y-auto">
-            <table class="table-sm table">
-              <thead>
-                <tr>
-                  <th>{{ t('item.columns.code') }}</th>
-                  <th>{{ t('item.columns.type') }}</th>
-                  <th>{{ t('item.columns.rarity') }}</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in results" :key="item._id" class="hover">
-                  <td class="font-mono text-sm">{{ item.code }}</td>
-                  <td><VItemTypeBadge :value="item.type" /></td>
-                  <td><VItemRarityBadge :value="item.rarity" /></td>
-                  <td>
-                    <VButton
-                      v-if="!isAdded(item.code)"
-                      class="btn-primary btn-xs"
-                      @click="select(item)"
-                    >
-                      {{ t('gacha.rewards.addBtn') }}
-                    </VButton>
-                    <span v-else class="text-base-content/40 text-xs">
-                      {{ t('gacha.rewards.alreadyAdded') }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        <div class="min-h-32">
+          <div v-if="searching" class="flex justify-center py-8">
+            <span class="loading loading-spinner loading-md"></span>
           </div>
-          <p v-else class="text-base-content/40 py-8 text-center text-sm">{{ t('table.empty') }}</p>
-        </template>
 
-        <p v-else class="text-base-content/30 py-8 text-center text-sm">
-          {{ t('gacha.rewards.searchHint') }}
-        </p>
+          <template v-else-if="searched">
+            <div v-if="results.length" class="overflow-y-auto">
+              <table class="table-sm table">
+                <thead>
+                  <tr>
+                    <th>{{ t('item.columns.code') }}</th>
+                    <th>{{ t('item.columns.type') }}</th>
+                    <th>{{ t('item.columns.rarity') }}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in results" :key="item._id" class="hover">
+                    <td class="font-mono text-sm">{{ item.code }}</td>
+                    <td><VItemTypeBadge :value="item.type" /></td>
+                    <td><VItemRarityBadge :value="item.rarity" /></td>
+                    <td>
+                      <VButton
+                        v-if="!isAdded(item.code)"
+                        class="btn-primary btn-xs"
+                        @click="select(item)"
+                      >
+                        {{ t('gacha.rewards.addBtn') }}
+                      </VButton>
+                      <span v-else class="text-base-content/40 text-xs">
+                        {{ t('gacha.rewards.alreadyAdded') }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p v-else class="text-base-content/40 py-8 text-center text-sm">
+              {{ t('table.empty') }}
+            </p>
+          </template>
+
+          <p v-else class="text-base-content/30 py-8 text-center text-sm">
+            {{ t('gacha.rewards.searchHint') }}
+          </p>
+        </div>
       </div>
 
       <div class="modal-action">
-        <VButton class="btn-ghost" @click="emit('close')">{{ t('common.close') }}</VButton>
+        <VButton class="btn-ghost" @click="close">{{ t('common.close') }}</VButton>
       </div>
     </div>
-    <form method="dialog" class="modal-backdrop" @submit.prevent="emit('close')">
-      <button>close</button>
-    </form>
   </dialog>
 </template>

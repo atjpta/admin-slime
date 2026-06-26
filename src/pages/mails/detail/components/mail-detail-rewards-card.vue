@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { CoinsIcon, PackageIcon } from '@lucide/vue'
 import { ItemRarity } from '@/enums/item.enum'
-import { StatType } from '@/enums/stat.enum'
+
 import VItemDetailModal from '@/components/ui/modal/v-item-detail-modal.vue'
 import type { MailDetail, PopulatedItemReward } from '@/interfaces/mail.interface'
 
@@ -23,11 +23,6 @@ type RarityStat = { stat: string; type: string; value: number }
 
 function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
   return (metadata?.rarityStats as RarityStat[]) ?? []
-}
-
-function displayValue(value: number, type: string): string {
-  if (type === StatType.PERCENT) return `${+(value * 100).toFixed(2)}%`
-  return value.toLocaleString()
 }
 </script>
 

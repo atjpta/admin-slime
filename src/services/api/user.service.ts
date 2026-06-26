@@ -4,13 +4,15 @@ import { BaseApi } from '@/services/api/base-api.service'
 
 class UserService extends BaseApi {
   private url = '/admin/users'
+
   async index(filter: UserFilter) {
-    const res = await this.http.get(`${this.url}`, { query: filter })
-    return this.unwrap<Pagination<User[]>>(res)
+    return this.execute<Pagination<User[]>>(() =>
+      this.http.get<Pagination<User[]>>(this.url, { query: filter })
+    )
   }
 
   async update(id: string, body: UpdateUserBody) {
-    await this.http.put(`${this.url}/${id}`, { body })
+    return this.execute<User>(() => this.http.put<User>(`${this.url}/${id}`, { body }))
   }
 }
 

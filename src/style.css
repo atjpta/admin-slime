@@ -1,4 +1,18 @@
 @import 'tailwindcss';
+
+.toast-portal {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.toast-portal > * {
+  pointer-events: auto;
+}
 @plugin "daisyui" {
   themes:
     light --default,

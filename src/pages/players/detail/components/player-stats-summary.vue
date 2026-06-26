@@ -39,7 +39,7 @@ function groupedDetail(key: string) {
         <div
           v-for="key in col"
           :key="key"
-          class="collapse collapse-arrow rounded-box border border-base-200"
+          class="collapse-arrow rounded-box border-base-200 collapse border"
         >
           <input type="checkbox" />
           <div class="collapse-title flex items-center justify-between pr-10">
@@ -54,7 +54,9 @@ function groupedDetail(key: string) {
                 <div class="mb-2 flex items-center gap-2">
                   <span
                     class="badge badge-sm"
-                    :class="sourceGroup.source === StatSource.EQUIPMENT ? 'badge-info' : 'badge-ghost'"
+                    :class="
+                      sourceGroup.source === StatSource.EQUIPMENT ? 'badge-info' : 'badge-ghost'
+                    "
                   >
                     {{ t(`stat.source.${sourceGroup.source}`) }}
                   </span>
@@ -66,7 +68,9 @@ function groupedDetail(key: string) {
                     :key="typeGroup.type"
                     class="odd:bg-base-200 flex items-center justify-between rounded px-2 py-1 text-sm"
                   >
-                    <span class="text-base-content/60 text-xs">{{ t(`stat.type.${typeGroup.type}`) }}</span>
+                    <span class="text-base-content/60 text-xs">{{
+                      t(`stat.type.${typeGroup.type}`)
+                    }}</span>
                     <span class="font-medium tabular-nums">
                       +{{ typeGroup.total }}{{ typeGroup.type === StatType.PERCENT ? '%' : '' }}
                     </span>

@@ -1,11 +1,9 @@
-export const PlayerStatus = {
-  ACTIVE: 'active',
-  INACTIVE: 'inactive',
-} as const
-export type PlayerStatus = (typeof PlayerStatus)[keyof typeof PlayerStatus]
+export enum PlayerStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+}
 
-export const PlayerRole = {
-  PLAYER: 'player',
-  BOT: 'bot',
-} as const
-export type PlayerRole = (typeof PlayerRole)[keyof typeof PlayerRole]
+export enum PlayerRole {
+  PLAYER = 'player',
+  BOT = 'bot',
+}

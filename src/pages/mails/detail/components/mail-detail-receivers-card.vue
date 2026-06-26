@@ -13,7 +13,7 @@ const filtered = computed(() => {
   const q = search.value.trim().toLowerCase()
   if (!q) return props.mail.receivers
   return props.mail.receivers.filter(
-    (r) => r.name.toLowerCase().includes(q) || r._id.toLowerCase().includes(q),
+    (r) => r.name.toLowerCase().includes(q) || r._id.toLowerCase().includes(q)
   )
 })
 </script>
@@ -21,14 +21,9 @@ const filtered = computed(() => {
 <template>
   <div class="flex flex-col gap-4">
     <label class="input input-sm input-bordered flex items-center gap-2">
-        <SearchIcon class="text-base-content/40 size-4 shrink-0" />
-        <input
-          v-model="search"
-          type="text"
-          class="grow"
-          :placeholder="t('common.search')"
-        />
-      </label>
+      <SearchIcon class="text-base-content/40 size-4 shrink-0" />
+      <input v-model="search" type="text" class="grow" :placeholder="t('common.search')" />
+    </label>
 
     <div class="max-h-64 overflow-y-auto">
       <p v-if="!filtered.length" class="text-base-content/40 py-4 text-center text-sm">
