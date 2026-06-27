@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, useTemplateRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import VButton from '@/components/ui/btn/v-button.vue'
@@ -21,7 +21,7 @@ const { t } = useI18n()
 const id = route.params.id as string
 const detail = ref<Gacha | null>(null)
 const { loading, withLoading } = useDetailLoading()
-const editingGacha = ref<Gacha | null>(null)
+const editModal = useTemplateRef<{ open: (gacha: Gacha) => void }>('editModal')
 
 // Tabs
 type Tab = 'costs' | 'rarities' | 'rewards'
@@ -57,6 +57,10 @@ async function fetchDetail(silent = false) {
   })
 }
 
+function openEditModal() {
+  if (detail.value) editModal.value?.open(detail.value)
+}
+
 onMounted(() => fetchDetail())
 </script>
 
@@ -65,7 +69,7 @@ onMounted(() => fetchDetail())
     <VDetailSkeleton v-if="loading" />
 
     <template v-else-if="detail">
-      <GachaInfoCard :gacha="detail" @edit="editingGacha = detail" />
+      <GachaInfoCard :gacha="detail" @edit="openEditModal" />
 
       <div class="card bg-base-100 shadow-sm">
         <div class="card-body p-4">
@@ -99,5 +103,5 @@ onMounted(() => fetchDetail())
     </template>
   </div>
 
-  <GachaEditModal :gacha="editingGacha" @close="editingGacha = null" @updated="fetchDetail" />
+  <GachaEditModal ref="editModal" @updated="fetchDetail" />
 </template>

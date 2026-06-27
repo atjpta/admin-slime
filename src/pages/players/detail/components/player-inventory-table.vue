@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, h, ref, watch } from 'vue'
+import { computed, h, ref, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useVueTable, getCoreRowModel } from '@tanstack/vue-table'
 import type { ColumnDef } from '@tanstack/vue-table'
@@ -9,7 +9,7 @@ import VButton from '@/components/ui/btn/v-button.vue'
 import VPagination from '@/components/ui/pagination/v-pagination.vue'
 import VItemTypeBadge from '@/components/ui/badge/v-item-type-badge.vue'
 import VItemRarityBadge from '@/components/ui/badge/v-item-rarity-badge.vue'
-import VItemDetailModal from '@/components/ui/modal/v-item-detail-modal.vue'
+import VItemDetailModal, { type ItemForDetail, type RarityStat } from '@/components/ui/modal/v-item-detail-modal.vue'
 import VConfirmModal from '@/components/ui/modal/v-confirm-modal.vue'
 import VTableToolbar from '@/components/ui/table/v-table-toolbar.vue'
 import VSelectFilter from '@/components/ui/select/v-select-filter.vue'
@@ -18,22 +18,21 @@ import { playerService } from '@/services/api/player.service'
 import type {
   InventoryItem,
   PlayerInventory,
-  InventoryItemDef,
   EquipmentInstanceMetadata,
 } from '@/interfaces/player.interface'
-
-interface ModalState {
-  item: InventoryItemDef
-  instanceMeta: EquipmentInstanceMetadata | null
-}
 
 const props = defineProps<{ inventory: PlayerInventory | null; playerId: string }>()
 const emit = defineEmits<{ removed: [] }>()
 const { t } = useI18n()
 
-const modal = ref<ModalState | null>(null)
+const itemDetailModal = useTemplateRef<{ open: (item: ItemForDetail, stats?: RarityStat[] | null) => void }>('itemDetailModal')
 const confirmTarget = ref<InventoryItem | null>(null)
 const removingId = ref<string | null>(null)
+
+function openItemDetail(inv: InventoryItem) {
+  const meta = inv.metadata as EquipmentInstanceMetadata
+  itemDetailModal.value?.open(inv.item, meta?.rarityStats ?? null)
+}
 
 async function confirmRemove() {
   const inv = confirmTarget.value
@@ -56,6 +55,12 @@ const pageSize = ref(20)
 watch([search, filterType, filterRarity, filterSource], () => {
   page.value = 1
 })
+
+function resetFilters() {
+  filterType.value = ''
+  filterRarity.value = ''
+  filterSource.value = ''
+}
 
 const filteredItems = computed(() => {
   const items = props.inventory?.items ?? []
@@ -119,12 +124,7 @@ const columns = computed<ColumnDef<InventoryItem>[]>(() => [
       h(VButton, {
         icon: InfoIcon,
         class: 'btn-ghost btn-sm text-info',
-        onClick: () => {
-          modal.value = {
-            item: row.original.item,
-            instanceMeta: row.original.metadata as EquipmentInstanceMetadata,
-          }
-        },
+        onClick: () => openItemDetail(row.original),
       }),
     meta: { align: 'center' },
   },
@@ -158,13 +158,7 @@ const table = useVueTable({
     v-model="search"
     class="mb-3"
     :active-filters="!!filterType || !!filterRarity || !!filterSource"
-    @reset="
-      () => {
-        filterType = ''
-        filterRarity = ''
-        filterSource = ''
-      }
-    "
+    @reset="resetFilters"
   >
     <template #filters>
       <VSelectFilter
@@ -191,11 +185,7 @@ const table = useVueTable({
   <VTable :table="table" />
   <VPagination v-model:page="page" v-model:page-size="pageSize" :total="total" class="mt-3" />
 
-  <VItemDetailModal
-    :item="modal?.item ?? null"
-    :rarity-stats="modal?.instanceMeta?.rarityStats ?? null"
-    @close="modal = null"
-  />
+  <VItemDetailModal ref="itemDetailModal" />
   <VConfirmModal
     :open="!!confirmTarget"
     :title="t('player.detail.removeConfirm')"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, ref, reactive, toRef, computed } from 'vue'
+import { h, ref, reactive, toRef, computed, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { ColumnDef } from '@tanstack/vue-table'
 import { EyeIcon } from '@lucide/vue'
@@ -30,7 +30,7 @@ const filter = reactive({
   status: '' as MailStatus | '',
   type: '' as 'sent' | 'received' | '',
 })
-const selectedMail = ref<PlayerMailAdminItem | null>(null)
+const mailDetailModal = useTemplateRef<{ open: (item: PlayerMailAdminItem) => void }>('mailDetailModal')
 
 const columns = computed<ColumnDef<PlayerMailAdminItem>[]>(() => [
   {
@@ -77,7 +77,7 @@ const columns = computed<ColumnDef<PlayerMailAdminItem>[]>(() => [
       h(VButton, {
         icon: EyeIcon,
         class: 'btn-ghost text-primary',
-        onClick: () => (selectedMail.value = row.original),
+        onClick: () => mailDetailModal.value?.open(row.original),
       }),
   },
 ])
@@ -134,5 +134,5 @@ function resetFilters() {
     <VPagination v-model:page="page" v-model:page-size="pageSize" :total="total" />
   </div>
 
-  <PlayerMailDetailModal :item="selectedMail" @close="selectedMail = null" />
+  <PlayerMailDetailModal ref="mailDetailModal" />
 </template>

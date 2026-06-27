@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, ref, reactive, toRef, computed } from 'vue'
+import { h, ref, reactive, toRef, computed, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import type { ColumnDef } from '@tanstack/vue-table'
@@ -22,7 +22,7 @@ const router = useRouter()
 
 const items = ref<GachaHistory[]>([])
 const total = ref(0)
-const selectedHistory = ref<GachaHistory | null>(null)
+const rewardsModal = useTemplateRef<{ open: (h: GachaHistory) => void }>('rewardsModal')
 
 const filter = reactive({ drawType: '' as DrawType | '' })
 
@@ -80,7 +80,7 @@ const columns = computed<ColumnDef<GachaHistory>[]>(() => [
         VButton,
         {
           class: 'btn-ghost btn-sm text-primary',
-          onClick: () => (selectedHistory.value = row.original),
+          onClick: () => rewardsModal.value?.open(row.original),
         },
         () => t('gacha.history.rewardCount', { n: count })
       )
@@ -143,5 +143,5 @@ const { table, page, pageSize, search, loading } = useDataTable({
     </div>
   </div>
 
-  <GachaHistoryRewardsModal :history="selectedHistory" @close="selectedHistory = null" />
+  <GachaHistoryRewardsModal ref="rewardsModal" />
 </template>

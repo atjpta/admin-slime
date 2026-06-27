@@ -27,8 +27,8 @@ export interface Gacha extends BaseResource {
   code: string
   type: GachaRewardType
   status: GachaStatus
-  startAt?: string
-  endAt?: string
+  startDate?: string
+  endDate?: string
   sortOrder: number
   costs: GachaCost[]
   rarities: GachaRarity[]
@@ -76,15 +76,15 @@ export interface GachaHistoryFilter extends PaginationFilter {
 
 export interface UpdateGachaDto {
   status?: GachaStatus
-  startAt?: string
-  endAt?: string
+  startDate?: string
+  endDate?: string
   sortOrder?: number
 }
 
 export interface CreateGachaDto {
   code: string
   type: GachaRewardType
-  startAt?: string
-  endAt?: string
+  startDate?: string
+  endDate?: string
   sortOrder?: number
 }

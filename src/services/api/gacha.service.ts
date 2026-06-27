@@ -1,4 +1,4 @@
-import type { Pagination } from '@/interfaces/pagination.interface'
+﻿import type { Pagination } from '@/interfaces/pagination.interface'
 import type {
   Gacha,
   GachaFilter,
@@ -17,43 +17,43 @@ class GachaService extends BaseApi {
 
   async index(filter: GachaFilter) {
     return this.execute<Pagination<Gacha[]>>(() =>
-      this.http.get<Pagination<Gacha[]>>(this.url, { query: filter })
+      this.http.get(this.url, { query: filter })
     )
   }
 
   async getById(id: string) {
-    return this.execute<Gacha>(() => this.http.get<Gacha>(`${this.url}/${id}`))
+    return this.execute<Gacha>(() => this.http.get(`${this.url}/${id}`))
   }
 
   async create(dto: CreateGachaDto) {
-    return this.execute<Gacha>(() => this.http.post<Gacha>(this.url, { body: dto }))
+    return this.execute<Gacha>(() => this.http.post(this.url, { body: dto }))
   }
 
   async update(id: string, dto: UpdateGachaDto) {
-    return this.execute<Gacha>(() => this.http.put<Gacha>(`${this.url}/${id}`, { body: dto }))
+    return this.execute<Gacha>(() => this.http.put(`${this.url}/${id}`, { body: dto }))
   }
 
   async updateCosts(id: string, costs: GachaCost[]) {
     return this.execute<Gacha>(() =>
-      this.http.put<Gacha>(`${this.url}/${id}/costs`, { body: { costs } })
+      this.http.put(`${this.url}/${id}/costs`, { body: { costs } })
     )
   }
 
   async updateRarities(id: string, rarities: GachaRarity[]) {
     return this.execute<Gacha>(() =>
-      this.http.put<Gacha>(`${this.url}/${id}/rarities`, { body: { rarities } })
+      this.http.put(`${this.url}/${id}/rarities`, { body: { rarities } })
     )
   }
 
   async updateRewards(id: string, dto: UpdateGachaRewardsDto) {
     return this.execute<Gacha>(() =>
-      this.http.put<Gacha>(`${this.url}/${id}/rewards`, { body: dto })
+      this.http.put(`${this.url}/${id}/rewards`, { body: dto })
     )
   }
 
   async listHistories(filter: GachaHistoryFilter) {
     return this.execute<Pagination<GachaHistory[]>>(() =>
-      this.http.get<Pagination<GachaHistory[]>>(`${this.url}/histories`, { query: filter })
+      this.http.get(`${this.url}/histories`, { query: filter })
     )
   }
 }

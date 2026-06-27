@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { CoinsIcon, PackageIcon } from '@lucide/vue'
 import { ItemRarity } from '@/enums/item.enum'
 
-import VItemDetailModal from '@/components/ui/modal/v-item-detail-modal.vue'
+import VItemDetailModal, { type ItemForDetail, type RarityStat } from '@/components/ui/modal/v-item-detail-modal.vue'
 import type { MailDetail, PopulatedItemReward } from '@/interfaces/mail.interface'
 
 defineProps<{ mail: MailDetail }>()
 const { t } = useI18n()
 
-const selectedReward = ref<PopulatedItemReward | null>(null)
+const itemDetailModal = useTemplateRef<{ open: (item: ItemForDetail, stats?: RarityStat[] | null) => void }>('itemDetailModal')
 
 const rarityClass: Record<string, string> = {
   [ItemRarity.COMMON]: 'badge-ghost',
@@ -19,10 +19,12 @@ const rarityClass: Record<string, string> = {
   [ItemRarity.LEGENDARY]: 'badge-warning',
 }
 
-type RarityStat = { stat: string; type: string; value: number }
-
 function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
   return (metadata?.rarityStats as RarityStat[]) ?? []
+}
+
+function openRewardDetail(reward: PopulatedItemReward) {
+  itemDetailModal.value?.open(reward.item, getRarityStats(reward.metadata ?? {}))
 }
 </script>
 
@@ -68,7 +70,7 @@ function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
           <div v-for="(reward, i) in mail.rewards.items" :key="i" class="bg-base-200/70 rounded-lg">
             <div
               class="hover:bg-base-200 flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 transition-colors"
-              @click="selectedReward = reward"
+              @click="openRewardDetail(reward)"
             >
               <div class="bg-base-300 flex size-8 shrink-0 items-center justify-center rounded-md">
                 <PackageIcon class="text-base-content/50 size-4" />
@@ -99,9 +101,5 @@ function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
     </template>
   </div>
 
-  <VItemDetailModal
-    :item="selectedReward?.item ?? null"
-    :rarity-stats="getRarityStats(selectedReward?.metadata ?? {})"
-    @close="selectedReward = null"
-  />
+  <VItemDetailModal ref="itemDetailModal" />
 </template>

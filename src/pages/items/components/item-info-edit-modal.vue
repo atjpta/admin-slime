@@ -68,7 +68,7 @@ function close() {
       </div>
       <h3 class="mb-4 text-lg font-semibold">{{ t('item.equipment.info.editTitle') }}</h3>
       <div class="-mx-6 max-h-[50dvh] overflow-y-auto px-6">
-        <form class="flex flex-col gap-3" @submit.prevent="form.handleSubmit">
+        <form id="item-info-edit-modal-form" class="flex flex-col gap-3" @submit.prevent="form.handleSubmit">
           <form.Field name="type">
             <template #default="{ field }">
               <fieldset class="fieldset">
@@ -168,10 +168,10 @@ function close() {
         </form>
       </div>
       <div class="modal-action">
-        <VButton type="button" class="btn-ghost" :disabled="form.state.isSubmitting" @click="close">
+        <VButton type="button" form="item-info-edit-modal-form" class="btn-ghost" :disabled="form.state.isSubmitting" @click="close">
           {{ t('common.cancel') }}
         </VButton>
-        <VButton type="submit" class="btn-primary" :loading="form.state.isSubmitting">
+        <VButton type="submit" form="item-info-edit-modal-form" class="btn-primary" :loading="form.state.isSubmitting">
           {{ t('common.save') }}
         </VButton>
       </div>

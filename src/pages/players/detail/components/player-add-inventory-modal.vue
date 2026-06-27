@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useForm } from '@tanstack/vue-form'
 import { XIcon } from '@lucide/vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import VItemTypeBadge from '@/components/ui/badge/v-item-type-badge.vue'
@@ -143,27 +144,26 @@ function resolvedValue(e: SelectedEntry): number {
 }
 
 // --- Submit ---
-const submitLoading = ref(false)
-
-async function submit() {
-  if (!fetchedItem.value) return
-  submitLoading.value = true
-  const rarityStats =
-    rarityStatsMode.value === 'custom' && rollConfig.value
-      ? selectedEntries.value.map((e) => ({
-          stat: e.stat,
-          type: e.type,
-          value: resolvedValue(e),
-        }))
-      : undefined
-  await playerService.addInventoryItem(props.playerId, {
-    itemCode: fetchedItem.value.code,
-    rarityStats,
-  })
-  emit('added')
-  close()
-  submitLoading.value = false
-}
+const form = useForm({
+  defaultValues: {},
+  onSubmit: async () => {
+    if (!fetchedItem.value) return
+    const rarityStats =
+      rarityStatsMode.value === 'custom' && rollConfig.value
+        ? selectedEntries.value.map((e) => ({
+            stat: e.stat,
+            type: e.type,
+            value: resolvedValue(e),
+          }))
+        : undefined
+    await playerService.addInventoryItem(props.playerId, {
+      itemCode: fetchedItem.value.code,
+      rarityStats,
+    })
+    emit('added')
+    close()
+  },
+})
 
 function resetAll() {
   searchCode.value = ''
@@ -361,8 +361,8 @@ function close() {
         </template>
 
         <div class="modal-action mt-4">
-          <VButton class="btn btn-ghost" @click="close">{{ t('common.cancel') }}</VButton>
-          <VButton class="btn-primary" :loading="submitLoading" @click="submit">
+          <VButton type="button" class="btn btn-ghost" @click="close">{{ t('common.cancel') }}</VButton>
+          <VButton type="button" class="btn-primary" :loading="form.state.isSubmitting" @click="form.handleSubmit">
             {{ t('common.save') }}
           </VButton>
         </div>

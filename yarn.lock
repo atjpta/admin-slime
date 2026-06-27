@@ -762,10 +762,22 @@ ast-walker-scope@^0.9.0:
     "@babel/types" "^7.29.0"
     ast-kit "^2.2.0"
 
+atomico@^1.79.2:
+  version "1.79.2"
+  resolved "https://registry.yarnpkg.com/atomico/-/atomico-1.79.2.tgz#eebff0e65fe12fdf2d751f57ec66e8057e923ddc"
+  integrity sha512-mshhLRMeIltNYbnQnqgnrvJ/uDa8XDfTQcjw3ymOygQqwHIQ4Sp0LcNYMCbACkV3DtV+eDXb9szwU4qMUuGwYQ==
+
 birpc@^2.3.0, birpc@^2.6.1:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/birpc/-/birpc-2.9.0.tgz#b59550897e4cd96a223e2a6c1475b572236ed145"
   integrity sha512-KrayHS5pBi69Xi9JmvoqrIgYGDkD6mcSe/i6YKi3w5kekCLzrX4+nawcXqrj2tIp50Kw/mT/s3p+GVK0A0sKxw==
+
+cally@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/cally/-/cally-0.9.2.tgz#41e725570ebc1d5eadeefa6a81e29563c4f0a182"
+  integrity sha512-zY/Ueh+p6O+LKPYqNB13dATgNuazAHS0n3JbtKyUmMoQfRq5mC2/zFI3UV2X3g+2lZn2BBwr1Z+HxyG9Dt/6lw==
+  dependencies:
+    atomico "^1.79.2"
 
 chokidar@^5.0.0:
   version "5.0.0"

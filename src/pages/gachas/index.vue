@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, ref, reactive, toRef, computed } from 'vue'
+import { h, ref, reactive, toRef, computed, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import type { ColumnDef } from '@tanstack/vue-table'
@@ -16,7 +16,7 @@ import GachaCreateModal from './components/gacha-create-modal.vue'
 import { gachaService } from '@/services/api/gacha.service'
 import { GachaStatus } from '@/enums/gacha.enum'
 import type { Gacha, GachaFilter } from '@/interfaces/gacha.interface'
-import { formatDate } from '@/utils/format'
+import { formatDate, formatOnlyDate } from '@/utils/format'
 import { RouteName } from '@/router'
 
 const { t } = useI18n()
@@ -24,7 +24,7 @@ const router = useRouter()
 
 const items = ref<Gacha[]>([])
 const total = ref(0)
-const editingItem = ref<Gacha | null>(null)
+const editModal = useTemplateRef<{ open: (gacha: Gacha) => void }>('editModal')
 const showCreateModal = ref(false)
 
 const filter = reactive({ status: '' as GachaStatus | '' })
@@ -56,16 +56,16 @@ const columns = computed<ColumnDef<Gacha>[]>(() => [
     meta: { align: 'center', minWidth: 'w-24' },
   },
   {
-    accessorKey: 'startAt',
+    accessorKey: 'startDate',
     header: t('gacha.columns.startAt'),
-    cell: ({ row }) => formatDate(row.getValue('startAt')),
-    meta: { align: 'center', minWidth: 'w-40' },
+    cell: ({ row }) => formatOnlyDate(row.getValue('startDate')) || '-',
+    meta: { align: 'center', minWidth: 'w-36' },
   },
   {
-    accessorKey: 'endAt',
+    accessorKey: 'endDate',
     header: t('gacha.columns.endAt'),
-    cell: ({ row }) => formatDate(row.getValue('endAt')),
-    meta: { align: 'center', minWidth: 'w-40' },
+    cell: ({ row }) => formatOnlyDate(row.getValue('endDate')) || '-',
+    meta: { align: 'center', minWidth: 'w-36' },
   },
   {
     accessorKey: 'createdAt',
@@ -88,7 +88,7 @@ const columns = computed<ColumnDef<Gacha>[]>(() => [
         h(VButton, {
           icon: SquarePenIcon,
           class: 'btn-ghost text-primary',
-          onClick: () => (editingItem.value = row.original),
+          onClick: () => editModal.value?.open(row.original),
         }),
       ]),
   },
@@ -145,7 +145,7 @@ const { table, page, pageSize, search, loading } = useDataTable({
     </div>
   </div>
 
-  <GachaEditModal :gacha="editingItem" @close="editingItem = null" @updated="fetchItems" />
+  <GachaEditModal ref="editModal" @updated="fetchItems" />
   <GachaCreateModal
     :open="showCreateModal"
     @close="showCreateModal = false"

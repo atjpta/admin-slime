@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { InfoIcon } from '@lucide/vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import VItemRarityBadge from '@/components/ui/badge/v-item-rarity-badge.vue'
-import VItemDetailModal from '@/components/ui/modal/v-item-detail-modal.vue'
+import VItemDetailModal, { type ItemForDetail, type RarityStat } from '@/components/ui/modal/v-item-detail-modal.vue'
 import { playerService } from '@/services/api/player.service'
 import { ItemType } from '@/enums/item.enum'
 import type { EquipmentSlot } from '@/enums/item.enum'
@@ -13,6 +13,7 @@ import type {
   InventoryItem,
   EquipmentItemMetadata,
   EquipmentInstanceMetadata,
+  InventoryItemDef,
 } from '@/interfaces/player.interface'
 
 const props = defineProps<{
@@ -35,9 +36,9 @@ watch(
   }
 )
 
+const itemDetailModal = useTemplateRef<{ open: (item: ItemForDetail, stats?: RarityStat[] | null) => void }>('itemDetailModal')
 const search = ref('')
 const equippingId = ref<string | null>(null)
-const detailItem = ref<InventoryItem | null>(null)
 
 const matchingItems = computed<InventoryItem[]>(() => {
   if (!props.slot || !props.inventory) return []
@@ -58,6 +59,11 @@ async function equip(inv: InventoryItem) {
   emit('equipped')
   close()
   equippingId.value = null
+}
+
+function openItemDetail(inv: InventoryItem) {
+  const meta = inv.metadata as EquipmentInstanceMetadata
+  itemDetailModal.value?.open(inv.item as InventoryItemDef, meta?.rarityStats ?? null)
 }
 
 function close() {
@@ -103,7 +109,7 @@ function close() {
                 <VButton
                   :icon="InfoIcon"
                   class="btn-ghost btn-xs text-info"
-                  @click="detailItem = inv"
+                  @click="openItemDetail(inv)"
                 />
               </td>
               <td>
@@ -127,9 +133,5 @@ function close() {
     </div>
   </dialog>
 
-  <VItemDetailModal
-    :item="detailItem?.item ?? null"
-    :rarity-stats="(detailItem?.metadata as EquipmentInstanceMetadata)?.rarityStats ?? null"
-    @close="detailItem = null"
-  />
+  <VItemDetailModal ref="itemDetailModal" />
 </template>

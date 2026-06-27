@@ -1,4 +1,4 @@
-import type { Pagination } from '@/interfaces/pagination.interface'
+﻿import type { Pagination } from '@/interfaces/pagination.interface'
 import type { BattleItem, BattleItemFilter } from '@/interfaces/battle-item.interface'
 import { BaseApi } from '@/services/api/base-api.service'
 
@@ -7,7 +7,7 @@ class BattleItemService extends BaseApi {
 
   async index(filter: BattleItemFilter) {
     return this.execute<Pagination<BattleItem[]>>(() =>
-      this.http.get<Pagination<BattleItem[]>>(this.url, { query: filter })
+      this.http.get(this.url, { query: filter })
     )
   }
 }

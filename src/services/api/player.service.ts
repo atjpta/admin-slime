@@ -1,4 +1,4 @@
-import type { Pagination } from '@/interfaces/pagination.interface'
+﻿import type { Pagination } from '@/interfaces/pagination.interface'
 import type {
   Player,
   PlayerFilter,
@@ -17,29 +17,29 @@ class PlayerService extends BaseApi {
 
   async index(filter: PlayerFilter) {
     return this.execute<Pagination<Player[]>>(() =>
-      this.http.get<Pagination<Player[]>>(this.url, { query: filter })
+      this.http.get(this.url, { query: filter })
     )
   }
 
   async getById(id: string) {
-    return this.execute<PlayerDetail>(() => this.http.get<PlayerDetail>(`${this.url}/${id}`))
+    return this.execute<PlayerDetail>(() => this.http.get(`${this.url}/${id}`))
   }
 
   async getInventory(id: string) {
     return this.execute<PlayerInventory>(() =>
-      this.http.get<PlayerInventory>(`${this.url}/${id}/inventory`)
+      this.http.get(`${this.url}/${id}/inventory`)
     )
   }
 
   async getEquipment(id: string) {
     return this.execute<PlayerEquipment>(() =>
-      this.http.get<PlayerEquipment>(`${this.url}/${id}/equipment`)
+      this.http.get(`${this.url}/${id}/equipment`)
     )
   }
 
   async getStats(id: string) {
     return this.execute<PlayerStatsResult>(() =>
-      this.http.get<PlayerStatsResult>(`${this.url}/${id}/stats`)
+      this.http.get(`${this.url}/${id}/stats`)
     )
   }
 
@@ -49,7 +49,7 @@ class PlayerService extends BaseApi {
 
   async getMails(playerId: string, filter: PlayerMailFilter) {
     return this.execute<Pagination<PlayerMailAdminItem[]>>(() =>
-      this.http.get<Pagination<PlayerMailAdminItem[]>>(`${this.url}/${playerId}/mails`, {
+      this.http.get(`${this.url}/${playerId}/mails`, {
         query: filter,
       })
     )

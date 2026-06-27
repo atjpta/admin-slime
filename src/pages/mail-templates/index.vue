@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, ref, computed } from 'vue'
+import { h, ref, computed, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from '@/utils/toast'
 import type { ColumnDef } from '@tanstack/vue-table'
@@ -19,8 +19,7 @@ const { t } = useI18n()
 
 const templates = ref<MailTemplate[]>([])
 const total = ref(0)
-const editingTemplate = ref<MailTemplate | null>(null)
-const showCreateModal = ref(false)
+const formModal = useTemplateRef<{ open: (template?: MailTemplate) => void }>('formModal')
 const deletingTemplate = ref<MailTemplate | null>(null)
 const deleteLoading = ref(false)
 
@@ -57,7 +56,7 @@ const columns = computed<ColumnDef<MailTemplate>[]>(() => [
         h(VButton, {
           icon: SquarePenIcon,
           class: 'btn-ghost text-primary',
-          onClick: () => (editingTemplate.value = row.original),
+          onClick: () => formModal.value?.open(row.original),
         }),
         h(VButton, {
           icon: Trash2Icon,
@@ -103,7 +102,7 @@ async function confirmDelete() {
         <h1 class="text-xl font-semibold">{{ t('mailTemplate.title') }}</h1>
         <p class="text-base-content/50 text-sm">{{ t('mailTemplate.subtitle') }}</p>
       </div>
-      <VButton :icon="PlusIcon" class="btn-primary" @click="showCreateModal = true">
+      <VButton :icon="PlusIcon" class="btn-primary" @click="formModal?.open()">
         <span class="hidden sm:inline">{{ t('common.create') }}</span>
       </VButton>
     </div>
@@ -117,20 +116,7 @@ async function confirmDelete() {
     </div>
   </div>
 
-  <MailTemplateFormModal
-    v-if="showCreateModal"
-    mode="create"
-    :template="null"
-    @close="showCreateModal = false"
-    @saved="fetchTemplates"
-  />
-
-  <MailTemplateFormModal
-    mode="edit"
-    :template="editingTemplate"
-    @close="editingTemplate = null"
-    @saved="fetchTemplates"
-  />
+  <MailTemplateFormModal ref="formModal" @saved="fetchTemplates" />
 
   <VConfirmModal
     :open="!!deletingTemplate"

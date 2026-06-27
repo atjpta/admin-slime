@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, h, ref } from 'vue'
+import { computed, h, ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useVueTable, getCoreRowModel } from '@tanstack/vue-table'
 import type { ColumnDef } from '@tanstack/vue-table'
@@ -8,7 +8,7 @@ import VTable from '@/components/ui/table/v-table.vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import VItemRarityBadge from '@/components/ui/badge/v-item-rarity-badge.vue'
 import VConfirmModal from '@/components/ui/modal/v-confirm-modal.vue'
-import VItemDetailModal from '@/components/ui/modal/v-item-detail-modal.vue'
+import VItemDetailModal, { type ItemForDetail, type RarityStat } from '@/components/ui/modal/v-item-detail-modal.vue'
 import PlayerEquipModal from './player-equip-modal.vue'
 import { playerService } from '@/services/api/player.service'
 import { EquipmentSlot } from '@/enums/item.enum'
@@ -16,18 +16,12 @@ import type {
   PlayerEquipment,
   PlayerInventory,
   EquipmentSlotData,
-  InventoryItemDef,
   EquipmentInstanceMetadata,
 } from '@/interfaces/player.interface'
 
 interface EquipmentRow {
   slot: EquipmentSlot
   data: EquipmentSlotData | null
-}
-
-interface ModalState {
-  item: InventoryItemDef
-  instanceMeta: EquipmentInstanceMetadata | null
 }
 
 const props = defineProps<{
@@ -40,10 +34,15 @@ const emit = defineEmits<{ updated: [] }>()
 const { t } = useI18n()
 
 // --- Modals ---
-const detailModal = ref<ModalState | null>(null)
+const itemDetailModal = useTemplateRef<{ open: (item: ItemForDetail, stats?: RarityStat[] | null) => void }>('itemDetailModal')
 const equipSlot = ref<EquipmentSlot | null>(null)
 const unequipTarget = ref<EquipmentSlot | null>(null)
 const unEquipping = ref(false)
+
+function openItemDetail(data: EquipmentSlotData) {
+  const meta = data.metadata as EquipmentInstanceMetadata
+  itemDetailModal.value?.open(data.item, meta?.rarityStats ?? null)
+}
 
 async function confirmUnequip() {
   if (!unequipTarget.value) return
@@ -109,12 +108,7 @@ const columns = computed<ColumnDef<EquipmentRow>[]>(() => [
       return h(VButton, {
         icon: InfoIcon,
         class: 'btn-ghost btn-sm text-info',
-        onClick: () => {
-          detailModal.value = {
-            item: row.original.data!.item,
-            instanceMeta: row.original.data!.metadata as EquipmentInstanceMetadata,
-          }
-        },
+        onClick: () => openItemDetail(row.original.data!),
       })
     },
     meta: { align: 'center' },
@@ -172,11 +166,7 @@ const table = useVueTable({
 <template>
   <VTable :table="table" />
 
-  <VItemDetailModal
-    :item="detailModal?.item ?? null"
-    :rarity-stats="detailModal?.instanceMeta?.rarityStats ?? null"
-    @close="detailModal = null"
-  />
+  <VItemDetailModal ref="itemDetailModal" />
 
   <PlayerEquipModal
     :open="!!equipSlot"

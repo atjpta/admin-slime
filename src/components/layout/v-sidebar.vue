@@ -15,6 +15,12 @@ import {
   MailIcon,
   SendIcon,
   FileTextIcon,
+  TrophyIcon,
+  ListOrderedIcon,
+  CalendarDaysIcon,
+  StarIcon,
+  ServerIcon,
+  TimerIcon,
 } from '@lucide/vue'
 import type { NavItem } from '@/interfaces/nav-item.interface.ts'
 import VNavItem from './v-nav-item.vue'
@@ -111,6 +117,50 @@ const NAV: NavItem[] = [
         icon: FileTextIcon,
         iconClass: 'text-teal-500',
         routeName: RouteName.MailTemplates,
+      },
+    ],
+  },
+  {
+    labelKey: 'nav.rankManagement',
+    icon: TrophyIcon,
+    iconClass: 'text-slate-400',
+    children: [
+      {
+        labelKey: 'nav.rankConfigs',
+        icon: ListOrderedIcon,
+        iconClass: 'text-yellow-500',
+        routeName: RouteName.RankConfigs,
+      },
+      {
+        labelKey: 'nav.rankSessions',
+        icon: CalendarDaysIcon,
+        iconClass: 'text-sky-500',
+        routeName: RouteName.RankSessions,
+      },
+      {
+        labelKey: 'nav.rankTierConfigs',
+        icon: StarIcon,
+        iconClass: 'text-amber-500',
+        routeName: RouteName.RankTierConfigs,
+      },
+      {
+        labelKey: 'nav.rankHallOfFames',
+        icon: TrophyIcon,
+        iconClass: 'text-orange-400',
+        routeName: RouteName.RankHallOfFames,
+      },
+    ],
+  },
+  {
+    labelKey: 'nav.system',
+    icon: ServerIcon,
+    iconClass: 'text-slate-400',
+    children: [
+      {
+        labelKey: 'nav.cronLogs',
+        icon: TimerIcon,
+        iconClass: 'text-indigo-500',
+        routeName: RouteName.CronLogs,
       },
     ],
   },

@@ -87,7 +87,7 @@ function isAdded(code: string) {
   <dialog ref="dialog" class="modal">
     <div class="modal-box max-w-2xl">
       <div class="absolute top-3 right-3">
-        <VButton class="btn-ghost btn-circle" @click="close"> ✕ </VButton>
+        <VButton type="button" class="btn-ghost btn-circle" @click="close"> ✕ </VButton>
       </div>
       <h3 class="mb-4 text-lg font-semibold">{{ t('gacha.rewards.addTitle') }}</h3>
 
@@ -123,6 +123,7 @@ function isAdded(code: string) {
                     <td>
                       <VButton
                         v-if="!isAdded(item.code)"
+                        type="button"
                         class="btn-primary btn-xs"
                         @click="select(item)"
                       >
@@ -148,7 +149,7 @@ function isAdded(code: string) {
       </div>
 
       <div class="modal-action">
-        <VButton class="btn-ghost" @click="close">{{ t('common.close') }}</VButton>
+        <VButton type="button" class="btn-ghost" @click="close">{{ t('common.close') }}</VButton>
       </div>
     </div>
   </dialog>

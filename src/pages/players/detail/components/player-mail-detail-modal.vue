@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, watch, useTemplateRef } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { CoinsIcon, PackageIcon } from '@lucide/vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import VMailStatusBadge from '@/components/ui/badge/v-mail-status-badge.vue'
-import VItemDetailModal from '@/components/ui/modal/v-item-detail-modal.vue'
+import VItemDetailModal, { type ItemForDetail, type RarityStat } from '@/components/ui/modal/v-item-detail-modal.vue'
 import { ItemRarity } from '@/enums/item.enum'
 import { MailSource } from '@/enums/mail.enum'
 import { formatDate } from '@/utils/format'
@@ -12,29 +12,26 @@ import { mailService } from '@/services/api/mail.service'
 import type { PlayerMailAdminItem } from '@/interfaces/player.interface'
 import type { MailDetail, PopulatedItemReward } from '@/interfaces/mail.interface'
 
-const props = defineProps<{ item: PlayerMailAdminItem | null }>()
 const emit = defineEmits<{ close: [] }>()
 
 const { t, locale } = useI18n()
 
 const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
+const itemDetailModal = useTemplateRef<{ open: (item: ItemForDetail, stats?: RarityStat[] | null) => void }>('itemDetailModal')
+const currentItem = ref<PlayerMailAdminItem | null>(null)
 const mailDetail = ref<MailDetail | null>(null)
 const loadingDetail = ref(false)
-const selectedReward = ref<PopulatedItemReward | null>(null)
 
-watch(
-  () => props.item,
-  async (val) => {
-    if (!val) {
-      mailDetail.value = null
-      return
-    }
-    dialogRef.value?.showModal()
-    loadingDetail.value = true
-    mailDetail.value = await mailService.getById(val.mail._id)
-    loadingDetail.value = false
-  }
-)
+defineExpose({ open })
+
+async function open(item: PlayerMailAdminItem) {
+  currentItem.value = item
+  mailDetail.value = null
+  dialogRef.value?.showModal()
+  loadingDetail.value = true
+  mailDetail.value = await mailService.getById(item.mail._id)
+  loadingDetail.value = false
+}
 
 function close() {
   emit('close')
@@ -48,15 +45,18 @@ const rarityClass: Record<string, string> = {
   [ItemRarity.LEGENDARY]: 'badge-warning',
 }
 
-type RarityStat = { stat: string; type: string; value: number }
 function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
   return (metadata?.rarityStats as RarityStat[]) ?? []
+}
+
+function openRewardDetail(reward: PopulatedItemReward) {
+  itemDetailModal.value?.open(reward.item, getRarityStats(reward.metadata ?? {}))
 }
 </script>
 
 <template>
   <dialog ref="dialog" class="modal">
-    <div v-if="item" class="modal-box max-w-lg">
+    <div v-if="currentItem" class="modal-box max-w-lg">
       <div class="absolute top-3 right-3">
         <VButton class="btn-ghost btn-circle" @click="close"> ✕ </VButton>
       </div>
@@ -64,11 +64,11 @@ function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
       <div class="mb-4 flex items-start justify-between gap-3">
         <div class="min-w-0">
           <h3 class="truncate text-lg font-semibold">
-            {{ item.mail.title[locale as 'vi' | 'en'] || item.mail.title.vi || item.mail.title.en }}
+            {{ currentItem.mail.title[locale as 'vi' | 'en'] || currentItem.mail.title.vi || currentItem.mail.title.en }}
           </h3>
-          <p class="text-base-content/40 font-mono text-xs">{{ item.mail._id }}</p>
+          <p class="text-base-content/40 font-mono text-xs">{{ currentItem.mail._id }}</p>
         </div>
-        <VMailStatusBadge :value="item.status" class="shrink-0" />
+        <VMailStatusBadge :value="currentItem.status" class="shrink-0" />
       </div>
 
       <div class="-mx-6 max-h-[50dvh] overflow-y-auto px-6">
@@ -78,7 +78,7 @@ function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
             <span class="text-base-content/50 text-xs">{{ t('mail.columns.source') }}</span>
             <span class="font-medium">
               {{
-                item.mail.source === MailSource.SYSTEM
+                currentItem.mail.source === MailSource.SYSTEM
                   ? t('mail.source.system')
                   : t('mail.source.player')
               }}
@@ -86,15 +86,15 @@ function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
           </div>
           <div class="flex flex-col gap-0.5">
             <span class="text-base-content/50 text-xs">{{ t('mail.columns.expiredAt') }}</span>
-            <span class="font-medium">{{ formatDate(item.expiredAt) }}</span>
+            <span class="font-medium">{{ formatDate(currentItem.expiredAt) }}</span>
           </div>
           <div class="flex flex-col gap-0.5">
             <span class="text-base-content/50 text-xs">{{ t('player.detail.claimedAt') }}</span>
-            <span class="font-medium">{{ formatDate(item.claimedAt) }}</span>
+            <span class="font-medium">{{ formatDate(currentItem.claimedAt) }}</span>
           </div>
           <div class="flex flex-col gap-0.5">
             <span class="text-base-content/50 text-xs">{{ t('mail.columns.createdAt') }}</span>
-            <span class="font-medium">{{ formatDate(item.createdAt) }}</span>
+            <span class="font-medium">{{ formatDate(currentItem.createdAt) }}</span>
           </div>
         </div>
 
@@ -106,9 +106,9 @@ function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
             <span class="text-base-content/40 text-xs tracking-wide uppercase">
               {{ lang === 'vi' ? t('common.langVi') : t('common.langEn') }}
             </span>
-            <p class="text-sm font-semibold">{{ item.mail.title[lang] || '-' }}</p>
+            <p class="text-sm font-semibold">{{ currentItem.mail.title[lang] || '-' }}</p>
             <p class="text-base-content/70 text-sm whitespace-pre-wrap">
-              {{ item.mail.content[lang] || '-' }}
+              {{ currentItem.mail.content[lang] || '-' }}
             </p>
           </div>
         </div>
@@ -169,7 +169,7 @@ function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
                   >
                     <div
                       class="hover:bg-base-200 flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 transition-colors"
-                      @click="selectedReward = reward"
+                      @click="openRewardDetail(reward)"
                     >
                       <div
                         class="bg-base-300 flex size-8 shrink-0 items-center justify-center rounded-md"
@@ -212,9 +212,5 @@ function getRarityStats(metadata: Record<string, unknown>): RarityStat[] {
     </div>
   </dialog>
 
-  <VItemDetailModal
-    :item="selectedReward?.item ?? null"
-    :rarity-stats="getRarityStats(selectedReward?.metadata ?? {})"
-    @close="selectedReward = null"
-  />
+  <VItemDetailModal ref="itemDetailModal" />
 </template>

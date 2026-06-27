@@ -6,7 +6,16 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
   return {
-  plugins: [vue(), tailwindcss()],
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('calendar-'),
+        },
+      },
+    }),
+    tailwindcss(),
+  ],
   server: {
     port: Number(env.VITE_PORT) || 3000,
   },

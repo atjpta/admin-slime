@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, ref, reactive, toRef, computed } from 'vue'
+import { h, ref, reactive, toRef, computed, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { RouteName } from '@/router'
@@ -23,7 +23,7 @@ const router = useRouter()
 
 const users = ref<User[]>([])
 const total = ref(0)
-const editingUser = ref<User | null>(null)
+const editModal = useTemplateRef<{ open: (u: User) => void }>('editModal')
 const filter = reactive({ status: '' as UserStatus | '' })
 
 const columns = computed<ColumnDef<User>[]>(() => [
@@ -76,14 +76,10 @@ const columns = computed<ColumnDef<User>[]>(() => [
       h(VButton, {
         icon: SquarePenIcon,
         class: 'btn-ghost text-primary',
-        onClick: () => editUser(row.original),
+        onClick: () => editModal.value?.open(row.original),
       }),
   },
 ])
-
-function editUser(user: User) {
-  editingUser.value = user
-}
 
 async function fetchUsers() {
   const params: UserFilter = {
@@ -141,5 +137,5 @@ const { table, page, pageSize, search, loading } = useDataTable({
     </div>
   </div>
 
-  <UserEditModal :user="editingUser" @close="editingUser = null" @updated="fetchUsers" />
+  <UserEditModal ref="editModal" @updated="fetchUsers" />
 </template>

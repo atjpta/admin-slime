@@ -22,6 +22,14 @@ export enum RouteName {
   Mails = 'mails',
   MailDetail = 'mail-detail',
   MailTemplates = 'mail-templates',
+  RankConfigs = 'rank-configs',
+  RankConfigDetail = 'rank-config-detail',
+  RankSessions = 'rank-sessions',
+  RankSessionDetail = 'rank-session-detail',
+  RankTierConfigs = 'rank-tier-configs',
+  RankHallOfFames = 'rank-hall-of-fames',
+  CronLogs = 'cron-logs',
+  CronLogDetail = 'cron-log-detail',
 }
 
 const router = createRouter({
@@ -184,6 +192,97 @@ const router = createRouter({
             breadcrumbs: [
               { labelKey: 'nav.mailManagement' },
               { labelKey: 'nav.mailTemplates', routeName: RouteName.MailTemplates },
+            ],
+          },
+        },
+        {
+          path: 'rank-configs',
+          name: RouteName.RankConfigs,
+          component: () => import('@/pages/rank-configs/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.rankManagement' },
+              { labelKey: 'nav.rankConfigs', routeName: RouteName.RankConfigs },
+            ],
+          },
+        },
+        {
+          path: 'rank-configs/:id',
+          name: RouteName.RankConfigDetail,
+          component: () => import('@/pages/rank-configs/detail/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.rankManagement' },
+              { labelKey: 'nav.rankConfigs', routeName: RouteName.RankConfigs },
+              { labelKey: 'rankConfig.detail.title' },
+            ],
+          },
+        },
+        {
+          path: 'rank-sessions',
+          name: RouteName.RankSessions,
+          component: () => import('@/pages/rank-sessions/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.rankManagement' },
+              { labelKey: 'nav.rankSessions', routeName: RouteName.RankSessions },
+            ],
+          },
+        },
+        {
+          path: 'rank-sessions/:id',
+          name: RouteName.RankSessionDetail,
+          component: () => import('@/pages/rank-sessions/detail/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.rankManagement' },
+              { labelKey: 'nav.rankSessions', routeName: RouteName.RankSessions },
+              { labelKey: 'rankSession.detail.title' },
+            ],
+          },
+        },
+        {
+          path: 'rank-tier-configs',
+          name: RouteName.RankTierConfigs,
+          component: () => import('@/pages/rank-tier-configs/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.rankManagement' },
+              { labelKey: 'nav.rankTierConfigs', routeName: RouteName.RankTierConfigs },
+            ],
+          },
+        },
+        {
+          path: 'rank-hall-of-fames',
+          name: RouteName.RankHallOfFames,
+          component: () => import('@/pages/rank-hall-of-fames/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.rankManagement' },
+              { labelKey: 'nav.rankHallOfFames', routeName: RouteName.RankHallOfFames },
+            ],
+          },
+        },
+        {
+          path: 'cron-logs',
+          name: RouteName.CronLogs,
+          component: () => import('@/pages/cron-logs/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.system' },
+              { labelKey: 'nav.cronLogs', routeName: RouteName.CronLogs },
+            ],
+          },
+        },
+        {
+          path: 'cron-logs/:id',
+          name: RouteName.CronLogDetail,
+          component: () => import('@/pages/cron-logs/detail/index.vue'),
+          meta: {
+            breadcrumbs: [
+              { labelKey: 'nav.system' },
+              { labelKey: 'nav.cronLogs', routeName: RouteName.CronLogs },
+              { labelKey: 'cronLog.detail.title' },
             ],
           },
         },

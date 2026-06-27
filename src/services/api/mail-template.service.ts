@@ -1,4 +1,4 @@
-import type { Pagination } from '@/interfaces/pagination.interface'
+﻿import type { Pagination } from '@/interfaces/pagination.interface'
 import type {
   MailTemplate,
   MailTemplateFilter,
@@ -12,26 +12,26 @@ class MailTemplateService extends BaseApi {
 
   async index(filter: MailTemplateFilter) {
     return this.execute<Pagination<MailTemplate[]>>(() =>
-      this.http.get<Pagination<MailTemplate[]>>(this.url, { query: filter })
+      this.http.get(this.url, { query: filter })
     )
   }
 
   async getById(id: string) {
-    return this.execute<MailTemplate>(() => this.http.get<MailTemplate>(`${this.url}/${id}`))
+    return this.execute<MailTemplate>(() => this.http.get(`${this.url}/${id}`))
   }
 
   async create(dto: CreateMailTemplateDto) {
-    return this.execute<MailTemplate>(() => this.http.post<MailTemplate>(this.url, { body: dto }))
+    return this.execute<MailTemplate>(() => this.http.post(this.url, { body: dto }))
   }
 
   async update(id: string, dto: UpdateMailTemplateDto) {
     return this.execute<MailTemplate>(() =>
-      this.http.put<MailTemplate>(`${this.url}/${id}`, { body: dto })
+      this.http.put(`${this.url}/${id}`, { body: dto })
     )
   }
 
   async delete(id: string) {
-    return this.execute<MailTemplate>(() => this.http.delete<MailTemplate>(`${this.url}/${id}`))
+    return this.execute<MailTemplate>(() => this.http.delete(`${this.url}/${id}`))
   }
 }
 

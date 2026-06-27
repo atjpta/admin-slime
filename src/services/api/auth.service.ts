@@ -1,4 +1,4 @@
-import { BaseApi } from './base-api.service'
+﻿import { BaseApi } from './base-api.service'
 
 interface LoginPayload {
   email: string
@@ -12,7 +12,7 @@ interface LoginResponse {
 class AuthService extends BaseApi {
   async login(payload: LoginPayload): Promise<LoginResponse> {
     return this.execute<LoginResponse>(() =>
-      this.http.post<LoginResponse>('/admin/login', { body: payload })
+      this.http.post('/admin/login', { body: payload })
     )
   }
 }

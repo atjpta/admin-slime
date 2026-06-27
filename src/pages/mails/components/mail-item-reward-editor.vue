@@ -179,7 +179,7 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({
         min="1"
         class="input input-bordered input-xs w-16 text-center"
       />
-      <VButton :icon="Trash2Icon" class="btn-ghost btn-xs text-error" @click="removeRow(idx)" />
+      <VButton type="button" :icon="Trash2Icon" class="btn-ghost btn-xs text-error" @click="removeRow(idx)" />
     </div>
 
     <!-- Pending config -->
@@ -189,7 +189,7 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({
           <span class="font-mono font-bold">{{ pendingItem.code }}</span>
           <VItemTypeBadge :value="pendingItem.type" />
           <VItemRarityBadge :value="pendingItem.rarity" />
-          <VButton class="btn-ghost btn-xs ml-auto" @click="pendingItem = null">{{
+          <VButton type="button" class="btn-ghost btn-xs ml-auto" @click="pendingItem = null">{{
             t('common.edit')
           }}</VButton>
         </div>
@@ -226,6 +226,7 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({
             <button
               v-for="mode in ['random', 'custom'] as const"
               :key="mode"
+              type="button"
               class="btn btn-sm flex-1"
               :class="pendingRarityMode === mode ? 'btn-neutral' : 'btn-ghost'"
               @click="pendingRarityMode = mode"
@@ -242,6 +243,7 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({
               <button
                 v-for="opt in statOptions"
                 :key="`${opt.stat}__${opt.type}`"
+                type="button"
                 class="btn btn-xs"
                 :class="atLimit ? 'btn-disabled' : 'btn-outline'"
                 :disabled="atLimit"
@@ -270,6 +272,7 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({
                     <button
                       v-for="mode in ['random', 'manual', 'max'] as const"
                       :key="mode"
+                      type="button"
                       class="btn btn-xs flex-1"
                       :class="entry.valueMode === mode ? 'btn-neutral' : 'btn-ghost'"
                       @click="entry.valueMode = mode"
@@ -292,6 +295,7 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({
                   </p>
                 </div>
                 <button
+                  type="button"
                   class="btn btn-ghost btn-xs btn-square self-start"
                   @click="removeEntry(entry.id)"
                 >
@@ -306,7 +310,7 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({
         </template>
 
         <div class="mt-3 flex justify-end">
-          <VButton class="btn-primary btn-sm" @click="confirmAdd">{{
+          <VButton type="button" class="btn-primary btn-sm" @click="confirmAdd">{{
             t('common.confirm')
           }}</VButton>
         </div>
@@ -352,7 +356,7 @@ const sourceOptions = Object.values(ItemSource).map((v) => ({
                   <td><VItemTypeBadge :value="item.type" /></td>
                   <td><VItemRarityBadge :value="item.rarity" /></td>
                   <td>
-                    <VButton class="btn-primary btn-xs" @click.stop="selectItem(item)">
+                    <VButton type="button" class="btn-primary btn-xs" @click.stop="selectItem(item)">
                       {{ t('common.select') }}
                     </VButton>
                   </td>

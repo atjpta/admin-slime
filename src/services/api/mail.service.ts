@@ -1,4 +1,4 @@
-import type { Pagination } from '@/interfaces/pagination.interface'
+﻿import type { Pagination } from '@/interfaces/pagination.interface'
 import type {
   Mail,
   MailDetail,
@@ -13,24 +13,28 @@ class MailService extends BaseApi {
 
   async index(filter: MailFilter) {
     return this.execute<Pagination<Mail[]>>(() =>
-      this.http.get<Pagination<Mail[]>>(this.url, { query: filter })
+      this.http.get(this.url, { query: filter })
     )
   }
 
   async getById(id: string) {
-    return this.execute<MailDetail>(() => this.http.get<MailDetail>(`${this.url}/${id}`))
+    return this.execute<MailDetail>(() => this.http.get(`${this.url}/${id}`))
   }
 
   async update(id: string, dto: UpdateMailDto) {
-    return this.execute<Mail>(() => this.http.put<Mail>(`${this.url}/${id}`, { body: dto }))
+    return this.execute<Mail>(() => this.http.put(`${this.url}/${id}`, { body: dto }))
   }
 
   async send(dto: SendMailDto) {
-    return this.execute<Mail>(() => this.http.post<Mail>(this.url, { body: dto }))
+    return this.execute<Mail>(() => this.http.post(this.url, { body: dto }))
+  }
+
+  async resend(id: string) {
+    return this.execute<{ sent: number }>(() => this.http.post(`${this.url}/${id}/resend`))
   }
 
   async delete(id: string) {
-    return this.execute<Mail>(() => this.http.delete<Mail>(`${this.url}/${id}`))
+    return this.execute<Mail>(() => this.http.delete(`${this.url}/${id}`))
   }
 }
 

@@ -352,15 +352,13 @@ src/pages/<resource>/detail/
 ```vue
 <template>
   <div class="flex flex-col gap-6">
-    <div v-if="loading" class="flex justify-center py-16">
-      <span class="loading loading-spinner loading-lg"></span>
-    </div>
+    <VDetailSkeleton v-if="loading" />
 
     <template v-else-if="detail">
       <!-- 1. Info card (tên, ID, field, nút edit nếu có — tất cả trong đây) -->
       <ResourceInfoCard :detail="detail" @edit="..." />
 
-      <!-- 2. Tabbed sections -->
+      <!-- 2. Tabbed sections — tabs + TẤT CẢ sections nằm trong CÙNG một card-body -->
       <div class="card bg-base-100 shadow-sm">
         <div class="card-body p-4">
           <div role="tablist" class="tabs tabs-border mb-4">
@@ -378,7 +376,12 @@ src/pages/<resource>/detail/
           </div>
           <div class="flex flex-col gap-4">
             <div :class="sectionOrder('tab1')" class="rounded-box border-base-200 border p-4">
+              <p class="text-base-content/70 mb-3 text-sm font-semibold">{{ t('resource.tabs.tab1') }}</p>
               <Tab1Section :detail="detail" />
+            </div>
+            <div :class="sectionOrder('tab2')" class="rounded-box border-base-200 border p-4">
+              <p class="text-base-content/70 mb-3 text-sm font-semibold">{{ t('resource.tabs.tab2') }}</p>
+              <Tab2Section :detail="detail" />
             </div>
           </div>
         </div>
@@ -403,6 +406,8 @@ function sectionOrder(tab: Tab) {
   return activeTab.value === tab ? 'order-first' : 'order-last'
 }
 ```
+
+**Cách hoạt động của `sectionOrder`:** Tất cả sections đều được render cùng lúc (không dùng `v-if`/`v-show`). `order-first` đưa section active lên đầu, `order-last` đẩy các section còn lại xuống dưới — kết quả là ấn tab thì phần đó nổi lên trên cùng, các phần khác vẫn hiển thị bên dưới.
 
 ### Info card pattern
 
@@ -455,6 +460,9 @@ Info card chứa tất cả: tên resource, ID mono, các field chính, và nút
 - **Không** có back button — điều hướng qua sidebar
 - **Không** dùng tiêu đề "Chi tiết X" — hiển thị tên/code của chính resource
 - Tab section components **không** bọc thêm `card`/`card-body` — root element là `<div class="flex flex-col gap-4">`
+- Tabs và **tất cả** sections nằm trong **cùng một** `card-body p-4` — **không** tách thành hai div riêng (một div cho tabs, một div cho content)
+- Section wrapper dùng `rounded-box border-base-200 border p-4`, **không** dùng `card bg-base-200/50` hay nested card-body
+- Section title dùng `<p class="text-base-content/70 mb-3 text-sm font-semibold">` ngay bên trong wrapper, **không** phải tiêu đề `<h2>` hay `card-title`
 
 ---
 
@@ -478,21 +486,67 @@ function close() {
 }
 ```
 
-**Modals controlled bởi data prop** (e.g. `gacha: Gacha | null`):
-
-```ts
-watch(() => props.gacha, (g) => {
-  if (g) dialogRef.value?.showModal()
-})
-```
-
-**Modals controlled bởi `open: boolean` prop**:
+**Modals controlled bởi `open: boolean` prop** (không có item data — chỉ show/hide):
 
 ```ts
 watch(() => props.open, (v) => {
   if (v) dialogRef.value?.showModal()
   else dialogRef.value?.close()
 })
+```
+
+**Modals nhận item data — luôn dùng `defineExpose`:**
+
+Không dùng `watch(() => props.item)` để mở dialog. Thay vào đó, dùng `defineExpose({ open })` để parent gọi trực tiếp. Watch item có độ trễ tick và gây nhấp nháy hoặc hiển thị data cũ khi item đổi.
+
+```ts
+// Modal:
+const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
+const currentItem = ref<Item | null>(null)
+
+defineExpose({ open })
+
+function open(item: Item) {
+  currentItem.value = item
+  dialogRef.value?.showModal()
+}
+
+function close() {
+  emit('close')
+  dialogRef.value?.close()
+}
+```
+
+```ts
+// Parent:
+const modalRef = useTemplateRef<{ open: (item: Item) => void }>('modal')
+
+// Trong template:
+// <ItemEditModal ref="modal" @updated="fetchItems" />
+// onClick: () => modalRef.value?.open(row.original)
+```
+
+**Create+edit modal** (open không arg = create, có arg = edit):
+
+```ts
+const currentItem = ref<Item | null>(null)
+const isEdit = computed(() => !!currentItem.value)
+defineExpose({ open })
+
+function open(item?: Item) {
+  currentItem.value = item ?? null
+  if (item) form.reset({ ...fromItem(item) })
+  else form.reset(defaultValues)
+  dialogRef.value?.showModal()
+}
+```
+
+```ts
+// Parent — dùng 1 instance duy nhất cho cả create lẫn edit:
+const formModal = useTemplateRef<{ open: (item?: Item) => void }>('formModal')
+// Create: formModal.value?.open()
+// Edit:   formModal.value?.open(row.original)
+// Template: <FormModal ref="formModal" @saved="fetchItems" />
 ```
 
 ### Template
@@ -521,26 +575,60 @@ watch(() => props.open, (v) => {
 </dialog>
 ```
 
+**Modal có form:** Nếu modal chứa `<form>`, vì `modal-action` nằm ngoài scroll container (tức ngoài thẻ `<form>`), phải dùng HTML `form` attribute để liên kết button với form:
+
+```vue
+<!-- form trong scroll container -->
+<div class="-mx-6 max-h-[50dvh] overflow-y-auto px-6">
+  <form id="my-modal-form" @submit.prevent="form.handleSubmit">
+    ...
+  </form>
+</div>
+
+<!-- buttons ngoài scroll container -->
+<div class="modal-action">
+  <VButton type="button" form="my-modal-form" class="btn-ghost" @click="close">
+    {{ t('common.cancel') }}
+  </VButton>
+  <VButton type="submit" form="my-modal-form" class="btn-primary" :loading="form.state.isSubmitting">
+    {{ t('common.save') }}
+  </VButton>
+</div>
+```
+
+> Thiếu `form="..."` trên button thì click Save không có tác dụng gì.
+
 ### Quy tắc
 
 - **Không** dùng `:class="{ 'modal-open': ... }"` — dùng `dialogRef.showModal()` / `dialogRef.close()`
 - **Không** có `<form method="dialog" class="modal-backdrop">` — không click-outside-to-close
 - `modal-action` luôn nằm **ngoài** scroll container
 - Scroll container dùng class `"-mx-6 max-h-[50dvh] overflow-y-auto px-6"` — margin âm để padding của modal-box không bị cộng thêm
+- Modal có form: `<form id="...">` + `form="..."` trên mọi button trong `modal-action`
 
 ---
 
 ## Quy tắc chung
 
-**Event handler gọi nhiều hàm:** Nếu một event handler cần gọi ≥ 2 hàm, tạo wrapper function trong script thay vì viết inline arrow function trong template.
+**Event handler gọi nhiều hàm:** Nếu một event handler cần thực thi ≥ 2 statements, **bắt buộc** tạo wrapper function trong `<script setup>`. Áp dụng cho **mọi** dạng inline:
 
 ```vue
-<!-- sai -->
+<!-- sai — tất cả các dạng này đều bị cấm -->
+@close="editingItem = null; showCreateModal = false"
+@close="
+  editingItem = null
+  showCreateModal = false
+"
+@close="() => { editingItem = null; showCreateModal = false }"
 @updated="() => { refreshA(); refreshB(); refreshC() }"
 
-<!-- đúng -->
-async function onSomethingUpdated() { await Promise.all([refreshA(), refreshB(), refreshC()]) } ...
-@updated="onSomethingUpdated"
+<!-- đúng — luôn dùng named function -->
+function closeFormModal() {
+  editingItem.value = null
+  showCreateModal.value = false
+}
+...
+@close="closeFormModal"
 ```
 
 ---

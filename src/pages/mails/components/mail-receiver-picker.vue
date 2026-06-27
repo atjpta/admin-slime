@@ -84,7 +84,7 @@ function removePlayer(id: string) {
       <div v-if="modelValue.length" class="mb-3 flex flex-wrap gap-2">
         <div v-for="p in modelValue" :key="p._id" class="badge badge-neutral gap-1 pr-1">
           <span class="text-xs">{{ p.name }}</span>
-          <button class="btn btn-ghost btn-xs btn-circle size-4" @click="removePlayer(p._id)">
+          <button type="button" class="btn btn-ghost btn-xs btn-circle size-4" @click="removePlayer(p._id)">
             <XIcon class="size-3" />
           </button>
         </div>
@@ -117,7 +117,7 @@ function removePlayer(id: string) {
                   <td class="font-medium">{{ p.name }}</td>
                   <td class="text-base-content/50 text-xs">{{ p.user?.email }}</td>
                   <td>
-                    <VButton class="btn-primary btn-xs" @click.stop="selectPlayer(p)">
+                    <VButton type="button" class="btn-primary btn-xs" @click.stop="selectPlayer(p)">
                       {{ t('common.select') }}
                     </VButton>
                   </td>

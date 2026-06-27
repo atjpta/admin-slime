@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n'
 import { SquarePenIcon } from '@lucide/vue'
 import VButton from '@/components/ui/btn/v-button.vue'
 import VGachaStatusBadge from '@/components/ui/badge/v-gacha-status-badge.vue'
-import { formatDate } from '@/utils/format'
+import { formatOnlyDate } from '@/utils/format'
 import type { Gacha } from '@/interfaces/gacha.interface'
 
 defineProps<{ gacha: Gacha }>()
@@ -43,11 +43,11 @@ const { t } = useI18n()
         </div>
         <div class="flex flex-col gap-0.5">
           <span class="text-base-content/50 text-xs">{{ t('gacha.columns.startAt') }}</span>
-          <span class="font-medium">{{ formatDate(gacha.startAt) }}</span>
+          <span class="font-medium">{{ formatOnlyDate(gacha.startDate) || '-' }}</span>
         </div>
         <div class="flex flex-col gap-0.5">
           <span class="text-base-content/50 text-xs">{{ t('gacha.columns.endAt') }}</span>
-          <span class="font-medium">{{ formatDate(gacha.endAt) }}</span>
+          <span class="font-medium">{{ formatOnlyDate(gacha.endDate) || '-' }}</span>
         </div>
       </div>
     </div>

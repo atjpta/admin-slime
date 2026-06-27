@@ -61,7 +61,7 @@ function close() {
   <dialog ref="dialog" class="modal">
     <div class="modal-box max-w-md">
       <div class="absolute top-3 right-3">
-        <VButton class="btn-ghost btn-circle" @click="close"> ✕ </VButton>
+        <VButton type="button" class="btn-ghost btn-circle" @click="close"> ✕ </VButton>
       </div>
       <h3 class="mb-4 text-lg font-semibold">{{ t('gacha.rewards.quickAdd.title') }}</h3>
 
@@ -75,6 +75,7 @@ function close() {
               <button
                 v-for="v in ALL_TYPES"
                 :key="v"
+                type="button"
                 class="btn btn-sm"
                 :class="
                   selectedTypes.includes(v) ? 'btn-primary' : 'btn-ghost border-base-300 border'
@@ -97,6 +98,7 @@ function close() {
               <button
                 v-for="v in ALL_RARITIES"
                 :key="v"
+                type="button"
                 class="btn btn-sm"
                 :class="
                   selectedRarities.includes(v) ? 'btn-primary' : 'btn-ghost border-base-300 border'
@@ -121,8 +123,8 @@ function close() {
       </div>
 
       <div class="modal-action">
-        <VButton class="btn-ghost" @click="close">{{ t('common.cancel') }}</VButton>
-        <VButton class="btn-primary" @click="submit">
+        <VButton type="button" class="btn-ghost" @click="close">{{ t('common.cancel') }}</VButton>
+        <VButton type="button" class="btn-primary" @click="submit">
           {{ t('gacha.rewards.quickAdd.addBtn') }}
         </VButton>
       </div>

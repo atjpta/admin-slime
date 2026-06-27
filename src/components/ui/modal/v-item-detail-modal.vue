@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, useTemplateRef } from 'vue'
+import { ref, computed, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import VItemTypeBadge from '@/components/ui/badge/v-item-type-badge.vue'
 import VItemRarityBadge from '@/components/ui/badge/v-item-rarity-badge.vue'
@@ -26,25 +26,24 @@ export interface RarityStat {
   value: number
 }
 
-const props = defineProps<{
-  item: ItemForDetail | null
-  rarityStats?: RarityStat[] | null
-}>()
 const emit = defineEmits<{ close: [] }>()
 const { t } = useI18n()
 
 const dialogRef = useTemplateRef<HTMLDialogElement>('dialog')
+const currentItem = ref<ItemForDetail | null>(null)
+const currentRarityStats = ref<RarityStat[] | null>(null)
 
-watch(
-  () => !!props.item,
-  (v) => {
-    if (v) dialogRef.value?.showModal()
-  }
-)
+defineExpose({ open })
+
+function open(item: ItemForDetail, rarityStats?: RarityStat[] | null) {
+  currentItem.value = item
+  currentRarityStats.value = rarityStats ?? null
+  dialogRef.value?.showModal()
+}
 
 const equipMeta = computed<ItemEquipmentMetadata | null>(() => {
-  if (props.item?.type !== ItemType.EQUIPMENT) return null
-  const m = props.item.metadata as ItemEquipmentMetadata
+  if (currentItem.value?.type !== ItemType.EQUIPMENT) return null
+  const m = currentItem.value.metadata as ItemEquipmentMetadata
   return m?.slot ? m : null
 })
 
@@ -60,30 +59,30 @@ function closeModal() {
       <div class="absolute top-3 right-3">
         <VButton class="btn-ghost btn-circle" @click="closeModal"> ✕ </VButton>
       </div>
-      <template v-if="item">
+      <template v-if="currentItem">
         <!-- Header -->
         <div class="mb-4">
-          <p class="font-mono text-lg font-bold">{{ item.code }}</p>
+          <p class="font-mono text-lg font-bold">{{ currentItem.code }}</p>
           <div class="mt-1.5 flex flex-wrap items-center gap-2">
-            <VItemTypeBadge :value="item.type" />
-            <VItemRarityBadge :value="item.rarity" />
-            <VItemStatusBadge :value="item.status" />
+            <VItemTypeBadge :value="currentItem.type" />
+            <VItemRarityBadge :value="currentItem.rarity" />
+            <VItemStatusBadge :value="currentItem.status" />
           </div>
         </div>
 
         <div class="-mx-6 max-h-[50dvh] overflow-y-auto px-6">
           <!-- Info grid (sellPrice / stackable) -->
           <div
-            v-if="item.sellPrice !== undefined || item.stackable !== undefined"
+            v-if="currentItem.sellPrice !== undefined || currentItem.stackable !== undefined"
             class="bg-base-200 mb-4 grid grid-cols-2 gap-x-4 gap-y-2 rounded-lg p-3 text-sm"
           >
-            <div v-if="item.sellPrice !== undefined">
+            <div v-if="currentItem.sellPrice !== undefined">
               <p class="text-base-content/50 text-xs">{{ t('item.columns.sellPrice') }}</p>
-              <p class="font-medium">{{ item.sellPrice.toLocaleString() }}</p>
+              <p class="font-medium">{{ currentItem.sellPrice.toLocaleString() }}</p>
             </div>
-            <div v-if="item.stackable !== undefined">
+            <div v-if="currentItem.stackable !== undefined">
               <p class="text-base-content/50 text-xs">{{ t('item.columns.stackable') }}</p>
-              <p class="font-medium">{{ item.stackable ? t('common.yes') : t('common.no') }}</p>
+              <p class="font-medium">{{ currentItem.stackable ? t('common.yes') : t('common.no') }}</p>
             </div>
           </div>
 
@@ -119,12 +118,12 @@ function closeModal() {
               </div>
 
               <!-- Rarity stats (instance-specific) -->
-              <div v-if="rarityStats?.length" class="flex flex-col gap-2">
+              <div v-if="currentRarityStats?.length" class="flex flex-col gap-2">
                 <p class="text-base-content/50 text-xs font-medium tracking-wider uppercase">
                   {{ t('player.detail.rarityStats') }}
                 </p>
                 <div
-                  v-for="(s, i) in rarityStats"
+                  v-for="(s, i) in currentRarityStats"
                   :key="i"
                   class="bg-base-200 flex items-center justify-between rounded-lg px-3 py-2 text-sm"
                 >
